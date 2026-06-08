@@ -6,7 +6,7 @@ import Link from "next/link";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("orderId");
+  const orderId = searchParams?.get("orderId");
 
   return (
     <main className="page-surface">
