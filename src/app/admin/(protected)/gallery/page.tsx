@@ -1,4 +1,4 @@
-import AdminGalleryPage from "@/pages/admin-gallery-page";
+import AdminGalleryPage from "@/views/admin-gallery-page";
 
 export default function Page() {
   return <AdminGalleryPage />;

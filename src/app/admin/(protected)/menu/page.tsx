@@ -1,4 +1,4 @@
-import AdminMenuPage from "@/pages/admin-menu-page";
+import AdminMenuPage from "@/views/admin-menu-page";
 
 export default function Page() {
   return <AdminMenuPage />;

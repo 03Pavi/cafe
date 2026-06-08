@@ -1,4 +1,4 @@
-import AdminOrdersPage from "@/pages/admin-orders-page";
+import AdminOrdersPage from "@/views/admin-orders-page";
 
 export default function Page() {
   return <AdminOrdersPage />;

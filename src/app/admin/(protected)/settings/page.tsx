@@ -1,4 +1,4 @@
-import AdminSettingsPage from "@/pages/admin-settings-page";
+import AdminSettingsPage from "@/views/admin-settings-page";
 
 export default function Page() {
   return <AdminSettingsPage />;
