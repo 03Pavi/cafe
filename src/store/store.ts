@@ -1,49 +1,13 @@
+import { configureStore } from "@reduxjs/toolkit";
+import orderReducer from "@/entities/order/model/order-slice";
+import menuReducer from "@/entities/menu-item/model/menu-slice";
 
-import { persistReducer } from "redux-persist";
-import createWebStorage from "redux-persist/es/storage/createWebStorage";
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import userReducer from "./slices/user-slice";
-
-const createNoopStorage = () => {
-  return {
-    getItem(_key: any) {
-      return Promise.resolve(null);
-    },
-    setItem(_key: any, value: any) {
-      return Promise.resolve(value);
-    },
-    removeItem(_key: any) {
-      return Promise.resolve();
-    },
-  };
-};
-
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createNoopStorage();
-
-const persistConfig = {
-  key: "root",
-  storage,
-};
-
-const rootReducer = combineReducers({
-  user: userReducer,
+export const store = configureStore({
+  reducer: {
+    order: orderReducer,
+    menu: menuReducer,
+  },
 });
 
-const persistedReducer: any = persistReducer(persistConfig, rootReducer);
-
-export const store = () =>
-  configureStore({
-    reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: false,
-      }),
-  });
-
-export type AppStore = ReturnType<typeof store>;
-export type RootState = ReturnType<AppStore["getState"]>;
-export type AppDispatch = AppStore["dispatch"];
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
