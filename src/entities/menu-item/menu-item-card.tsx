@@ -1,8 +1,8 @@
 "use client";
 
 import type { MenuItem } from "@/entities/menu-item/menu-data";
-import { useAppDispatch } from "@/store/hooks";
-import { addToOrder } from "@/entities/order/model/order-slice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { addToOrder, updateQuantity, removeFromOrder } from "@/entities/order/model/order-slice";
 
 type MenuCardProps = {
   item: MenuItem;
@@ -10,6 +10,9 @@ type MenuCardProps = {
 
 export function MenuCard({ item }: MenuCardProps) {
   const dispatch = useAppDispatch();
+  const cartItem = useAppSelector((state) =>
+    state.order.items.find(i => i.name === item.name)
+  );
 
   const handleAdd = () => {
     dispatch(
@@ -21,17 +24,54 @@ export function MenuCard({ item }: MenuCardProps) {
     );
   };
 
+  const handleQuantityChange = (delta: number) => {
+    if (!cartItem) return;
+    const newQty = cartItem.quantity + delta;
+    if (newQty <= 0) {
+      dispatch(removeFromOrder(item.name));
+    } else {
+      dispatch(updateQuantity({ name: item.name, quantity: newQty }));
+    }
+  };
+
   return (
     <article className="menu-card">
       <div>
         <h3>{item.name}</h3>
         <p>{item.description}</p>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", width: "100%" }}>
-        <strong style={{ fontSize: "1.25rem" }}>{item.price}</strong>
-        <button onClick={handleAdd} className="button button--secondary" style={{ padding: "6px 12px", fontSize: "0.85rem" }}>
-          Add +
-        </button>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", width: "100%", gap: "10px" }}>
+        <strong style={{ fontSize: "1.15rem" }}>{item.price}</strong>
+
+        {cartItem ? (
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            border: "1px solid var(--color-caramel)",
+            borderRadius: "20px",
+            overflow: "hidden",
+            background: "var(--color-cream)"
+          }}>
+            <button
+              onClick={() => handleQuantityChange(-1)}
+              style={{ background: "none", border: "none", padding: "4px 10px", cursor: "pointer", fontWeight: "900", color: "var(--color-espresso)" }}
+            >
+              -
+            </button>
+            <span style={{ fontWeight: "900", fontSize: "0.9rem", minWidth: "12px", textAlign: "center" }}>{cartItem.quantity}</span>
+            <button
+              onClick={() => handleQuantityChange(1)}
+              style={{ background: "none", border: "none", padding: "4px 10px", cursor: "pointer", fontWeight: "900", color: "var(--color-espresso)" }}
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button onClick={handleAdd} className="button button--secondary" style={{ padding: "6px 16px", fontSize: "0.85rem", borderRadius: "20px" }}>
+            Add +
+          </button>
+        )}
       </div>
     </article>
   );
