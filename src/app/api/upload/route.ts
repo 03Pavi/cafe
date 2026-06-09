@@ -48,7 +48,6 @@ export async function POST(request: Request) {
         const serverTime = new Date(serverDateStr).getTime();
         const latency = (Date.now() - timeStart) / 2;
         driftOffset = (serverTime + latency) - Date.now();
-        console.log(`Cloudinary API clock drift detected: ${driftOffset}ms. Correcting timestamp.`);
       }
     } catch (e) {
       console.warn("Failed to fetch Cloudinary time for drift correction:", e);
@@ -66,13 +65,6 @@ export async function POST(request: Request) {
       paramsToSign,
       apiSecret
     );
-
-    console.log("Cloudinary Upload Signature Parameters:", {
-      ...paramsToSign,
-      local_system_time: new Date().toISOString(),
-      corrected_api_time: new Date(timestamp * 1000).toISOString(),
-      timestamp_offset_seconds: Math.floor(driftOffset / 1000),
-    });
 
     // Upload to Cloudinary using secure signed upload
     const uploadResult = await cloudinary.uploader.upload(fileBase64, {
