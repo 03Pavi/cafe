@@ -3,6 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase/firebase-config";
 import { collection, getDocs } from "firebase/firestore";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 interface OrderItem {
   name: string;
@@ -66,30 +72,34 @@ export default function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)" }}>📊 Dashboard Overview</h1>
+      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "12px" }}>
+        <DashboardIcon style={{ fontSize: "2rem" }} /> Dashboard Overview
+      </h1>
       
       <div style={{ display: "grid", gap: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", marginBottom: "40px" }}>
         <div className="location-card" style={{ padding: "20px" }}>
-          <span style={{ fontSize: "1.5rem" }}>📦</span>
+          <LocalShippingIcon style={{ fontSize: "2rem", color: "var(--color-espresso)" }} />
           <h3 style={{ margin: "8px 0 4px", fontSize: "0.9rem", color: "var(--color-muted)" }}>Total Orders</h3>
           <strong style={{ fontSize: "1.8rem", color: "var(--color-espresso)" }}>{totalOrders}</strong>
         </div>
         <div className="location-card" style={{ padding: "20px" }}>
-          <span style={{ fontSize: "1.5rem" }}>💰</span>
+          <MonetizationOnIcon style={{ fontSize: "2rem", color: "var(--color-green)" }} />
           <h3 style={{ margin: "8px 0 4px", fontSize: "0.9rem", color: "var(--color-muted)" }}>Revenue (Completed)</h3>
           <strong style={{ fontSize: "1.8rem", color: "var(--color-green)" }}>₹{revenue}</strong>
         </div>
         <div className="location-card" style={{ padding: "20px" }}>
-          <span style={{ fontSize: "1.5rem" }}>⏳</span>
+          <HourglassEmptyIcon style={{ fontSize: "2rem", color: "var(--color-caramel)" }} />
           <h3 style={{ margin: "8px 0 4px", fontSize: "0.9rem", color: "var(--color-muted)" }}>Active Orders</h3>
-          <strong style={{ fontSize: "1.8rem", color: "var(--color-secondary)" }}>{activeOrders}</strong>
+          <strong style={{ fontSize: "1.8rem", color: "var(--color-espresso)" }}>{activeOrders}</strong>
         </div>
       </div>
 
       <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1fr" }}>
         
         <div className="location-card" style={{ padding: "24px" }}>
-          <h2 style={{ fontSize: "1.3rem", marginBottom: "16px", color: "var(--color-espresso)" }}>🔥 Popular Items</h2>
+          <h2 style={{ fontSize: "1.3rem", marginBottom: "16px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
+            <WhatshotIcon style={{ color: "var(--color-caramel)" }} /> Popular Items
+          </h2>
           {popularItems.length === 0 ? (
             <p style={{ color: "var(--color-muted)" }}>No items sold yet.</p>
           ) : (
@@ -107,15 +117,12 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="location-card" style={{ padding: "24px" }}>
-          <h2 style={{ fontSize: "1.3rem", marginBottom: "16px", color: "var(--color-espresso)" }}>📈 Business Health</h2>
+          <h2 style={{ fontSize: "1.3rem", marginBottom: "16px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
+            <TrendingUpIcon style={{ color: "var(--color-green)" }} /> Business Health
+          </h2>
           <p style={{ fontSize: "0.95rem", lineHeight: "1.6" }}>
             Your neighborhood café is growing! Check your active orders tab to update customer delivery statuses, or update the menu card price and availability anytime.
           </p>
-          <div style={{ marginTop: "16px", display: "flex", gap: "10px" }}>
-            <span style={{ fontSize: "2rem" }}>☕</span>
-            <span style={{ fontSize: "2rem" }}>🍔</span>
-            <span style={{ fontSize: "2rem" }}>🧁</span>
-          </div>
         </div>
         
       </div>

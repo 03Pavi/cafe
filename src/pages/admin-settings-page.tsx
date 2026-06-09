@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase/firebase-config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { siteConfig } from "@/shared/config/site";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export default function AdminSettingsPage() {
   const [cafeName, setCafeName] = useState("");
@@ -24,10 +26,10 @@ export default function AdminSettingsPage() {
           setAddress(data.address || "");
           setHours(data.hours ? data.hours.join("\n") : "");
         } else {
-          setCafeName("Brew Haven Cafe");
-          setPhone("+91 98765 43210");
-          setAddress("123 Cozy Corner, Neighborhood Lane, City");
-          setHours("Mon - Fri: 8:00 AM - 10:00 PM\nSat - Sun: 9:00 AM - 11:00 PM");
+          setCafeName(siteConfig.cafeName);
+          setPhone(siteConfig.phone);
+          setAddress(siteConfig.address);
+          setHours(siteConfig.hours.join("\n"));
         }
       } catch (err) {
         console.error("Failed to load settings:", err);
@@ -51,7 +53,7 @@ export default function AdminSettingsPage() {
       };
       
       await setDoc(doc(db, "settings", "general"), payload);
-      setMessage("Settings saved successfully! ⚙️");
+      setMessage("Settings saved successfully!");
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
       console.error("Failed to save settings:", err);
@@ -65,7 +67,9 @@ export default function AdminSettingsPage() {
 
   return (
     <div style={{ maxWidth: "600px" }}>
-      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)" }}>⚙️ General Café Settings</h1>
+      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
+        <SettingsIcon /> General Café Settings
+      </h1>
 
       {message && (
         <div style={{ background: "rgba(122, 139, 111, 0.16)", border: "1px solid var(--color-green)", borderRadius: "var(--radius-sm)", padding: "12px", marginBottom: "20px", fontWeight: "bold" }}>
@@ -81,7 +85,7 @@ export default function AdminSettingsPage() {
             required
             value={cafeName}
             onChange={(e) => setCafeName(e.target.value)}
-            placeholder="e.g. Brew Haven Cafe"
+            placeholder={`e.g. ${siteConfig.cafeName}`}
           />
         </label>
 

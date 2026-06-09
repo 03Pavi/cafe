@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase/firebase-config";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { siteConfig } from "@/shared/config/site";
 
 const defaultSettings = {
-  cafeName: "Brew Haven Cafe",
-  phone: "+91 98765 43210",
-  address: "123 Cozy Corner, Neighborhood Lane, City",
-  hours: ["Mon - Fri: 8:00 AM - 10:00 PM", "Sat - Sun: 9:00 AM - 11:00 PM"],
+  cafeName: siteConfig.cafeName,
+  phone: siteConfig.phone,
+  address: siteConfig.address,
+  hours: siteConfig.hours,
 };
 
 export async function GET() {

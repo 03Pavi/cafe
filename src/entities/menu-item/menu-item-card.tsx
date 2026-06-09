@@ -36,12 +36,17 @@ export function MenuCard({ item }: MenuCardProps) {
 
   return (
     <article className="menu-card">
-      <div>
+      {item.image && (
+        <div className="menu-card__image-wrapper">
+          <img src={item.image} alt={item.name} className="menu-card__image" />
+        </div>
+      )}
+      <div className="menu-card__content">
         <h3>{item.name}</h3>
         <p>{item.description}</p>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "12px", width: "100%", gap: "10px" }}>
-        <strong style={{ fontSize: "1.15rem" }}>{item.price}</strong>
+      <div className="menu-card__footer">
+        <strong className="menu-card__price">{item.price}</strong>
 
         {cartItem ? (
           <div style={{

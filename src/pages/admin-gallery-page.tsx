@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { db, storage } from "@/lib/firebase/firebase-config";
 import { collection, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import AddIcon from "@mui/icons-material/Add";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 interface GalleryImage {
   id: string;
@@ -90,12 +93,16 @@ export default function AdminGalleryPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)" }}>🖼️ Café Gallery Manager</h1>
+      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
+        <PhotoLibraryIcon /> Café Gallery Manager
+      </h1>
 
       <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px" }}>➕ Add Gallery Image</h2>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <AddIcon /> Add Gallery Image
+          </h2>
 
           <label style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "12px" }}>
             Image Alt Text *
@@ -118,7 +125,9 @@ export default function AdminGalleryPage() {
         </form>
 
         <div className="location-card" style={{ padding: "24px" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px" }}>📋 Gallery Preview</h2>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <VisibilityIcon /> Gallery Preview
+          </h2>
           {loading ? (
             <p>Loading gallery...</p>
           ) : images.length === 0 ? (

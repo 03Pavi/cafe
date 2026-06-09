@@ -1,20 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navigationItems } from "@/shared/config/navigation";
 import { siteConfig } from "@/shared/config/site";
 import { useAppSelector } from "@/store/hooks";
-import { Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Box } from "@mui/material";
+import { Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Box } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import PersonIcon from "@mui/icons-material/Person";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import HomeIcon from "@mui/icons-material/Home";
+import LocalCafeIcon from "@mui/icons-material/LocalCafe";
+import InfoIcon from "@mui/icons-material/Info";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import EmailIcon from "@mui/icons-material/Email";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import LoginIcon from "@mui/icons-material/Login";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase-config";
+
+function getRouteIcon(href: string) {
+  switch (href) {
+    case "/":
+      return HomeIcon;
+    case "/menu":
+      return LocalCafeIcon;
+    case "/about":
+      return InfoIcon;
+    case "/location":
+      return LocationOnIcon;
+    case "/gallery":
+      return CollectionsIcon;
+    case "/contact":
+      return EmailIcon;
+    default:
+      return HomeIcon;
+  }
+}
 
 export function Navbar() {
   const pathname = usePathname();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const cartItems = useAppSelector((state) => state.order.items);
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.email === process.env.ADMIN_EMAIL) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Hide public Navbar on admin routes
   if (pathname?.startsWith("/admin")) {
@@ -39,9 +82,6 @@ export function Navbar() {
           {item.label}
         </Link>
       ))}
-      <Link href="/order" className="cart-badge" aria-label="Shopping Cart">
-        🛒 {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
-      </Link>
     </div>
   );
 
@@ -50,7 +90,6 @@ export function Navbar() {
       <nav className="site-nav container" aria-label="Main navigation">
         <div className="site-nav__left">
           <IconButton
-            edge="start"
             color="inherit"
             aria-label="menu"
             className="hamburger-menu"
@@ -59,7 +98,7 @@ export function Navbar() {
             <MenuIcon />
           </IconButton>
           <Link className="brand-mark" href="/">
-            <span className="brand-mark__icon">BH</span>
+            <span className="brand-mark__icon">{siteConfig.cafeInitials}</span>
             <span>{siteConfig.cafeName}</span>
           </Link>
         </div>
@@ -68,9 +107,18 @@ export function Navbar() {
           {navLinks}
         </div>
 
-        <Link className="nav-cta" href="/location">
-          Visit Us
-        </Link>
+        <div className="site-nav__right">
+          <Link href={isAdmin ? "/admin" : "/admin/login"} className="profile-badge" aria-label="Admin Profile">
+            <PersonIcon style={{ fontSize: "1.65rem", display: "block" }} />
+          </Link>
+          <Link href="/order" className="cart-badge" aria-label="Shopping Cart">
+            <ShoppingCartIcon style={{ fontSize: "1.55rem", display: "block" }} />
+            {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
+          </Link>
+          <Link className="nav-cta" href="/location">
+            Visit Us
+          </Link>
+        </div>
 
         <Drawer
           anchor="left"
@@ -90,42 +138,73 @@ export function Navbar() {
             </IconButton>
           </Box>
           <Link className="brand-mark" href="/" onClick={toggleDrawer(false)} style={{ marginBottom: "32px" }}>
-            <span className="brand-mark__icon">BH</span>
+            <span className="brand-mark__icon">{siteConfig.cafeInitials}</span>
             <span>{siteConfig.cafeName}</span>
           </Link>
           <List>
-            {navigationItems.map((item) => (
-              <ListItem key={item.href} disablePadding>
-                <Link href={item.href} passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
-                  <ListItemButton
-                    selected={pathname === item.href}
-                    sx={{
-                      borderRadius: "8px",
-                      mb: 1,
-                      "&.Mui-selected": {
-                        backgroundColor: "rgba(59, 47, 47, 0.08)",
-                        color: "var(--color-espresso)",
-                        "&:hover": {
-                          backgroundColor: "rgba(59, 47, 47, 0.12)",
+            {navigationItems.map((item) => {
+              const Icon = getRouteIcon(item.href);
+              return (
+                <ListItem key={item.href} disablePadding>
+                  <Link href={item.href} passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
+                    <ListItemButton
+                      selected={pathname === item.href}
+                      sx={{
+                        borderRadius: "8px",
+                        mb: 1,
+                        "&.Mui-selected": {
+                          backgroundColor: "rgba(59, 47, 47, 0.08)",
+                          color: "var(--color-espresso)",
+                          "&:hover": {
+                            backgroundColor: "rgba(59, 47, 47, 0.12)",
+                          }
                         }
-                      }
-                    }}
-                  >
-                    <ListItemText
-                      primary={item.label}
-                      primaryTypographyProps={{
-                        fontWeight: pathname === item.href ? 800 : 600,
-                        fontFamily: "Nunito Sans"
                       }}
-                    />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
+                    >
+                      <ListItemIcon sx={{ minWidth: "40px", color: "inherit" }}>
+                        <Icon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.label}
+                        primaryTypographyProps={{
+                          fontWeight: pathname === item.href ? 800 : 600,
+                          fontFamily: "Nunito Sans"
+                        }}
+                      />
+                    </ListItemButton>
+                  </Link>
+                </ListItem>
+              );
+            })}
             <ListItem disablePadding>
               <Link href="/order" passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
                 <ListItemButton
                   selected={pathname === "/order"}
+                  sx={{
+                    borderRadius: "8px",
+                    mb: 1,
+                    "&.Mui-selected": {
+                      backgroundColor: "rgba(59, 47, 47, 0.08)",
+                    }
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "40px", color: "inherit" }}>
+                    <ShoppingCartIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={`Cart (${totalItems})`}
+                    primaryTypographyProps={{
+                      fontWeight: pathname === "/order" ? 800 : 600,
+                      fontFamily: "Nunito Sans"
+                    }}
+                  />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+            <ListItem disablePadding>
+              <Link href={isAdmin ? "/admin" : "/admin/login"} passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
+                <ListItemButton
+                  selected={pathname === "/admin/login" || pathname?.startsWith("/admin")}
                   sx={{
                     borderRadius: "8px",
                     "&.Mui-selected": {
@@ -133,10 +212,13 @@ export function Navbar() {
                     }
                   }}
                 >
+                  <ListItemIcon sx={{ minWidth: "40px", color: "inherit" }}>
+                    {isAdmin ? <DashboardIcon /> : <LoginIcon />}
+                  </ListItemIcon>
                   <ListItemText
-                    primary={`Cart (${totalItems})`}
+                    primary={isAdmin ? "Admin Panel" : "Admin Log In"}
                     primaryTypographyProps={{
-                      fontWeight: pathname === "/order" ? 800 : 600,
+                      fontWeight: (pathname === "/admin/login" || pathname?.startsWith("/admin")) ? 800 : 600,
                       fontFamily: "Nunito Sans"
                     }}
                   />

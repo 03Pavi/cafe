@@ -3,6 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase/firebase-config";
 import { collection, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 
 interface Discount {
   code: string;
@@ -82,13 +86,16 @@ export default function AdminDiscountsPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)" }}>🎟️ Coupon Codes Manager</h1>
+      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "12px" }}>
+        <ConfirmationNumberIcon style={{ fontSize: "2rem" }} /> Coupon Codes Manager
+      </h1>
 
       <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px" }}>
-            {editingCode ? "✏️ Edit Coupon" : "➕ Create Coupon"}
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            {editingCode ? <EditIcon style={{ fontSize: "1.2rem" }} /> : <AddIcon style={{ fontSize: "1.2rem" }} />}
+            {editingCode ? "Edit Coupon" : "Create Coupon"}
           </h2>
           <label style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "12px" }}>
             Coupon Code *
@@ -135,7 +142,9 @@ export default function AdminDiscountsPage() {
         </form>
 
         <div className="location-card" style={{ padding: "24px" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px" }}>📋 Available Coupons</h2>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <LocalActivityIcon style={{ fontSize: "1.2rem" }} /> Available Coupons
+          </h2>
           {loading ? (
             <p>Loading coupons...</p>
           ) : discounts.length === 0 ? (

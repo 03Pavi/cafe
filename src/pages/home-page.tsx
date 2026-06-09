@@ -102,8 +102,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="grand-opening-cta">
-        <div className="container grand-opening-cta__inner">
+      <section className="container grand-opening-cta">
+        <div className="grand-opening-cta__inner">
           <div>
             <span>We are open now</span>
             <h2>Come Visit Us Today!</h2>

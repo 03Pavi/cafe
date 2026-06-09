@@ -4,6 +4,10 @@ import React, { useEffect, useState } from "react";
 import { db, storage } from "@/lib/firebase/firebase-config";
 import { collection, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 
 interface MenuItem {
   id: string;
@@ -118,13 +122,15 @@ export default function AdminMenuPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)" }}>🍽️ Menu Items Manager</h1>
+      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
+        <RestaurantIcon /> Menu Items Manager
+      </h1>
 
       <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px" }}>
-            {editingId ? "✏️ Edit Menu Item" : "➕ Add Menu Item"}
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            {editingId ? <><EditIcon /> Edit Menu Item</> : <><AddIcon /> Add Menu Item</>}
           </h2>
 
           <label style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "12px" }}>
@@ -196,7 +202,9 @@ export default function AdminMenuPage() {
         </form>
 
         <div className="location-card" style={{ padding: "24px" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px" }}>📋 Menu Items Listing</h2>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <ListAltIcon /> Menu Items Listing
+          </h2>
           {loading ? (
             <p>Loading items...</p>
           ) : items.length === 0 ? (

@@ -3,6 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase/firebase-config";
 import { collection, query, orderBy, onSnapshot, doc, updateDoc } from "firebase/firestore";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 interface Order {
   id: string;
@@ -68,7 +72,9 @@ export default function AdminOrdersPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)" }}>📦 Customer Orders (Real-time)</h1>
+      <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
+        <ShoppingBagIcon /> Customer Orders (Real-time)
+      </h1>
       
       {orders.length === 0 ? (
         <p style={{ color: "var(--color-muted)" }}>No customer orders placed yet.</p>
@@ -127,25 +133,25 @@ export default function AdminOrdersPage() {
                     disabled={order.status === "preparing"}
                     onClick={() => handleStatusChange(order.id, "preparing")}
                     className="button button--secondary"
-                    style={{ padding: "6px 10px", fontSize: "0.75rem" }}
+                    style={{ padding: "6px 10px", fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: "4px" }}
                   >
-                    🔨 Prepare
+                    <HourglassEmptyIcon style={{ fontSize: "0.95rem" }} /> Prepare
                   </button>
                   <button
                     disabled={order.status === "completed"}
                     onClick={() => handleStatusChange(order.id, "completed")}
                     className="button button--primary"
-                    style={{ padding: "6px 10px", fontSize: "0.75rem", background: "var(--color-green)" }}
+                    style={{ padding: "6px 10px", fontSize: "0.75rem", background: "var(--color-green)", display: "inline-flex", alignItems: "center", gap: "4px" }}
                   >
-                    ✓ Complete
+                    <CheckCircleIcon style={{ fontSize: "0.95rem" }} /> Complete
                   </button>
                   <button
                     disabled={order.status === "cancelled"}
                     onClick={() => handleStatusChange(order.id, "cancelled")}
                     className="button button--ghost"
-                    style={{ padding: "6px 10px", fontSize: "0.75rem", color: "red", borderColor: "red" }}
+                    style={{ padding: "6px 10px", fontSize: "0.75rem", color: "red", borderColor: "red", display: "inline-flex", alignItems: "center", gap: "4px" }}
                   >
-                    ✗ Cancel
+                    <CancelIcon style={{ fontSize: "0.95rem" }} /> Cancel
                   </button>
                 </div>
               </div>

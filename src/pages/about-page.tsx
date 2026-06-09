@@ -1,3 +1,5 @@
+import { siteConfig } from "@/shared/config/site";
+
 export default function AboutPage() {
   return (
     <main className="page-surface">
@@ -6,7 +8,7 @@ export default function AboutPage() {
           <span className="eyebrow">Our New Beginning</span>
           <h1>A neighborhood cafe opened with heart.</h1>
           <p>
-            Brew Haven Cafe began with a small dream: to build a cozy, premium,
+            {siteConfig.cafeName} began with a small dream: to build a cozy, premium,
             friendly space where people nearby could pause, meet, work, laugh,
             and feel welcomed from day one.
           </p>
