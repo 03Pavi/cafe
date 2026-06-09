@@ -40,6 +40,12 @@ const toMenuCategories = (items: FirestoreMenuItem[]): MenuCategory[] => {
 
 export async function GET() {
   try {
+    const categoriesSnapshot = await getDocs(collection(db, "categories"));
+    const categoryMap = new Map<string, string>();
+    categoriesSnapshot.forEach((catDoc) => {
+      categoryMap.set(catDoc.id, catDoc.data().name || catDoc.id);
+    });
+
     const snapshot = await getDocs(collection(db, "menu-items"));
 
     const menuItems: FirestoreMenuItem[] = [];
@@ -47,9 +53,13 @@ export async function GET() {
       menuItems.push(menuItemDoc.data() as FirestoreMenuItem);
     });
 
-    // Filter by availability and sort by category then name in memory
+    // Filter by availability, map category IDs to names, and sort in memory
     const processedItems = menuItems
       .filter((item) => item.isAvailable === true)
+      .map((item) => ({
+        ...item,
+        category: item.category ? (categoryMap.get(item.category) || item.category) : "",
+      }))
       .sort((a, b) => {
         const catA = a.category || "";
         const catB = b.category || "";

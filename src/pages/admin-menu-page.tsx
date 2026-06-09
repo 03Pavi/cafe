@@ -63,7 +63,7 @@ export default function AdminMenuPage() {
         });
         setCategories(list);
         if (list.length > 0) {
-          setCategory(list[0].name || list[0].id);
+          setCategory(list[0].id || list[0].name);
         }
       } catch (err) {
         console.error("Failed to load categories in menu manager:", err);
@@ -121,7 +121,8 @@ export default function AdminMenuPage() {
     setPrice(item.price);
     setDescription(item.description);
     setImageUrl(item.imageUrl);
-    setCategory(item.category);
+    const matchedCategory = categories.find(c => c.id === item.category || c.name === item.category);
+    setCategory(matchedCategory ? matchedCategory.id : item.category);
     setIsAvailable(item.isAvailable);
     setEditingId(item.id);
   };
@@ -170,7 +171,7 @@ export default function AdminMenuPage() {
                 <option value="">No categories created yet</option>
               ) : (
                 categories.map((cat) => (
-                  <option key={cat.id} value={cat.name}>
+                  <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>
                 ))
@@ -251,7 +252,7 @@ export default function AdminMenuPage() {
                     <div>
                       <h3 style={{ margin: 0, fontSize: "1rem" }}>{item.name}</h3>
                       <span style={{ fontSize: "0.8rem", color: "var(--color-muted)" }}>
-                        {item.category} • {item.isAvailable ? "Available" : "Unavailable"}
+                        {(categories.find(c => c.id === item.category || c.name === item.category)?.name || item.category)} • {item.isAvailable ? "Available" : "Unavailable"}
                       </span>
                     </div>
                   </div>
