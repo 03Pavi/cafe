@@ -13,6 +13,8 @@ export default function AdminSettingsPage() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [hours, setHours] = useState("");
+  const [directionsUrl, setDirectionsUrl] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
@@ -27,11 +29,15 @@ export default function AdminSettingsPage() {
           setPhone(data.phone || "");
           setAddress(data.address || "");
           setHours(data.hours ? data.hours.join("\n") : "");
+          setDirectionsUrl(data.directionsUrl || "");
+          setInstagram(data.instagram || "");
         } else {
           setCafeName(siteConfig.cafeName);
           setPhone(siteConfig.phone);
           setAddress(siteConfig.address);
           setHours(siteConfig.hours.join("\n"));
+          setDirectionsUrl(siteConfig.directionsUrl || "");
+          setInstagram(siteConfig.instagram || "");
         }
       } catch (err) {
         console.error("Failed to load settings:", err);
@@ -52,6 +58,8 @@ export default function AdminSettingsPage() {
         phone,
         address,
         hours: hours.split("\n").filter((h) => h.trim() !== ""),
+        directionsUrl,
+        instagram,
       };
       
       await setDoc(doc(db, "settings", "general"), payload);
@@ -110,6 +118,26 @@ export default function AdminSettingsPage() {
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="e.g. 123 Cafe Street"
+          />
+        </label>
+
+        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+          Google Maps Directions Link
+          <input
+            type="text"
+            value={directionsUrl}
+            onChange={(e) => setDirectionsUrl(e.target.value)}
+            placeholder="e.g. https://www.google.com/maps/..."
+          />
+        </label>
+
+        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+          Instagram Link
+          <input
+            type="text"
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
+            placeholder="e.g. https://www.instagram.com/yourcafe"
           />
         </label>
 

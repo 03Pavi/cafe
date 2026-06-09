@@ -14,6 +14,8 @@ const initialState: SettingsState = {
     phone: siteConfig.phone,
     address: siteConfig.address,
     hours: siteConfig.hours,
+    directionsUrl: siteConfig.directionsUrl,
+    instagram: siteConfig.instagram,
   },
   loading: false,
   error: null,

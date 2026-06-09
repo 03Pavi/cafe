@@ -8,6 +8,8 @@ const defaultSettings = {
   phone: siteConfig.phone,
   address: siteConfig.address,
   hours: siteConfig.hours,
+  directionsUrl: siteConfig.directionsUrl,
+  instagram: siteConfig.instagram,
 };
 
 export async function GET() {
@@ -29,13 +31,20 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { cafeName, phone, address, hours } = body;
+    const { cafeName, phone, address, hours, directionsUrl, instagram } = body;
     
     if (!cafeName || !phone || !address || !hours) {
       return NextResponse.json({ error: "Missing required settings fields" }, { status: 400 });
     }
     
-    const payload = { cafeName, phone, address, hours };
+    const payload = { 
+      cafeName, 
+      phone, 
+      address, 
+      hours,
+      directionsUrl: directionsUrl || "",
+      instagram: instagram || ""
+    };
     await setDoc(doc(db, "settings", "general"), payload);
     return NextResponse.json(payload);
   } catch (error) {

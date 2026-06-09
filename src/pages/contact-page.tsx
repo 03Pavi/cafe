@@ -28,7 +28,7 @@ export default function ContactPage() {
             </a>
             <a
               className="button button--ghost"
-              href="https://instagram.com"
+              href={siteSettings.instagram || "https://instagram.com"}
               target="_blank"
               rel="noreferrer"
             >

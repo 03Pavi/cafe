@@ -6,6 +6,8 @@ export interface SettingsData {
   phone: string;
   address: string;
   hours: string[];
+  directionsUrl?: string;
+  instagram?: string;
 }
 
 export const fetchSettings = createAsyncThunk<

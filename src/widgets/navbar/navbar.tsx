@@ -120,16 +120,66 @@ export function Navbar() {
           {navLinks}
         </div>
 
-        <div className="site-nav__right">
-          <Link href={profileLink} className="profile-badge" aria-label="User Profile">
-            <PersonIcon style={{ fontSize: "1.65rem", display: "block" }} />
-          </Link>
-          <Link href="/order" className="cart-badge" aria-label="Shopping Cart">
-            <ShoppingCartIcon style={{ fontSize: "1.55rem", display: "block" }} />
-            {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
-          </Link>
-          <Link className="nav-cta" href="/location">
-            Visit Us
+        <div className="site-nav__right" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {isLoggedIn ? (
+            <Link 
+              href={profileLink} 
+              style={{ 
+                fontWeight: 800, 
+                fontSize: "0.95rem", 
+                color: "var(--color-espresso)", 
+                fontFamily: "Nunito Sans",
+                textDecoration: "none"
+              }}
+            >
+              {isAdmin ? "Admin" : "Profile"}
+            </Link>
+          ) : (
+            <Link 
+              href="/login" 
+              style={{ 
+                fontWeight: 800, 
+                fontSize: "0.95rem", 
+                color: "var(--color-espresso)", 
+                fontFamily: "Nunito Sans",
+                textDecoration: "none"
+              }}
+            >
+              Sign In
+            </Link>
+          )}
+
+          <Link 
+            className="nav-cta" 
+            href="/order" 
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "8px", 
+              padding: "10px 18px", 
+              borderRadius: "20px" 
+            }}
+          >
+            <ShoppingCartIcon style={{ fontSize: "1.2rem" }} />
+            <span>Cart</span>
+            {totalItems > 0 && (
+              <span 
+                style={{ 
+                  background: "var(--color-cream)", 
+                  color: "var(--color-espresso)", 
+                  borderRadius: "50%", 
+                  width: "20px", 
+                  height: "20px", 
+                  display: "inline-flex", 
+                  alignItems: "center", 
+                  justifyContent: "center", 
+                  fontSize: "0.75rem", 
+                  fontWeight: "bold" 
+                }}
+              >
+                {totalItems}
+              </span>
+            )}
           </Link>
         </div>
 

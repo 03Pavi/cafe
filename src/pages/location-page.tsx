@@ -25,7 +25,7 @@ export default function LocationPage() {
             <h2>Contact</h2>
             <p>{siteSettings.phone}</p>
           </div>
-          <a className="button button--primary" href="https://maps.google.com" target="_blank" rel="noreferrer">
+          <a className="button button--primary" href={siteSettings.directionsUrl || "https://maps.google.com"} target="_blank" rel="noreferrer">
             Visit Us Today
           </a>
         </div>
