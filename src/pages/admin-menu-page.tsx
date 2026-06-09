@@ -102,9 +102,10 @@ export default function AdminMenuPage() {
     setUploading(true);
     try {
       return await uploadImage(imageFile, "menu");
-    } catch (err) {
-      console.warn("Image upload failed, falling back to mock:", err);
-      return imageUrl || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=300&q=80";
+    } catch (err: any) {
+      console.error("Image upload failed:", err);
+      alert(err.message || "Failed to upload image.");
+      throw err;
     } finally {
       setUploading(false);
     }

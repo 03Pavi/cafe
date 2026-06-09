@@ -8,6 +8,8 @@ export interface SettingsData {
   hours: string[];
   directionsUrl?: string;
   instagram?: string;
+  mapLatitude?: string;
+  mapLongitude?: string;
 }
 
 export const fetchSettings = createAsyncThunk<

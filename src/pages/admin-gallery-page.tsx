@@ -47,9 +47,10 @@ export default function AdminGalleryPage() {
     setUploading(true);
     try {
       return await uploadImage(imageFile, "gallery");
-    } catch (err) {
-      console.warn("Image upload failed, falling back to mock:", err);
-      return src || "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=300&q=80";
+    } catch (err: any) {
+      console.error("Image upload failed:", err);
+      alert(err.message || "Failed to upload image.");
+      throw err;
     } finally {
       setUploading(false);
     }

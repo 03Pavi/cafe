@@ -16,6 +16,8 @@ const initialState: SettingsState = {
     hours: siteConfig.hours,
     directionsUrl: siteConfig.directionsUrl,
     instagram: siteConfig.instagram,
+    mapLatitude: "",
+    mapLongitude: "",
   },
   loading: false,
   error: null,

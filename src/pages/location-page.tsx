@@ -8,6 +8,10 @@ export default function LocationPage() {
   const [mapLoaded, setMapLoaded] = useState(false);
   const siteSettings = useAppSelector((state) => state.settings.data);
 
+  const mapSrc = siteSettings.mapLatitude && siteSettings.mapLongitude
+    ? `https://maps.google.com/maps?q=${siteSettings.mapLatitude},${siteSettings.mapLongitude}&z=15&output=embed`
+    : `https://maps.google.com/maps?q=${encodeURIComponent(siteSettings.address || "cafe")}&output=embed`;
+
   return (
     <main className="page-surface">
       <section className="container location-page">
@@ -46,7 +50,7 @@ export default function LocationPage() {
           )}
           <iframe
             title="Cafe location map"
-            src="https://www.google.com/maps?q=cafe&output=embed"
+            src={mapSrc}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             onLoad={() => setMapLoaded(true)}
