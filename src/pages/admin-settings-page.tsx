@@ -166,7 +166,7 @@ export default function AdminSettingsPage() {
         <div className="admin-grid-even-columns">
           
           {/* Left Column: General Configuration Card */}
-          <div className="contact-form" style={{ padding: "24px", margin: 0, height: "100%" }}>
+          <div className="contact-form" style={{ padding: "24px", margin: 0, height: "100%", display: "block" }}>
             <h2 style={{ fontSize: "1.2rem", color: "var(--color-espresso)", marginBottom: "20px", fontWeight: "bold" }}>General Configuration</h2>
             
             <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
@@ -245,7 +245,7 @@ export default function AdminSettingsPage() {
           </div>
 
           {/* Right Column: Operating Hours Card */}
-          <div className="contact-form" style={{ padding: "24px", margin: 0, height: "100%" }}>
+          <div className="contact-form" style={{ padding: "24px", margin: 0, height: "100%", display: "block" }}>
             <h2 style={{ fontSize: "1.2rem", color: "var(--color-espresso)", marginBottom: "20px", fontWeight: "bold" ,maxHeight:"max-content"}}>Operating Hours</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {hourSlots.map((slot, index) => (
