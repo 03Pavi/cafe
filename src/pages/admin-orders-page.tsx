@@ -147,32 +147,34 @@ export default function AdminOrdersPage() {
                   <strong style={{ color: getStatusColor(order.status), textTransform: "uppercase" }}>{order.status}</strong>
                 </div>
                 
-                <div className="admin-order-actions-container" style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "flex-end", marginTop: "12px" }}>
-                  <button
-                    disabled={order.status !== "pending"}
-                    onClick={() => handleStatusChange(order.id, "preparing")}
-                    className="button button--secondary"
-                    style={{ padding: "6px 10px", fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: "4px" }}
-                  >
-                    <HourglassEmptyIcon style={{ fontSize: "0.95rem" }} /> Prepare
-                  </button>
-                  <button
-                    disabled={order.status !== "preparing"}
-                    onClick={() => handleStatusChange(order.id, "completed")}
-                    className="button button--primary"
-                    style={{ padding: "6px 10px", fontSize: "0.75rem", background: "var(--color-green)", display: "inline-flex", alignItems: "center", gap: "4px" }}
-                  >
-                    <CheckCircleIcon style={{ fontSize: "0.95rem" }} /> Complete
-                  </button>
-                  <button
-                    disabled={order.status !== "pending" && order.status !== "preparing"}
-                    onClick={() => handleStatusChange(order.id, "cancelled")}
-                    className="button button--ghost"
-                    style={{ padding: "6px 10px", fontSize: "0.75rem", color: "red", borderColor: "red", display: "inline-flex", alignItems: "center", gap: "4px" }}
-                  >
-                    <CancelIcon style={{ fontSize: "0.95rem" }} /> Cancel
-                  </button>
-                </div>
+                {order.status !== "completed" && order.status !== "cancelled" && (
+                  <div className="admin-order-actions-container" style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "flex-end", marginTop: "12px" }}>
+                    {order.status === "pending" && (
+                      <button
+                        onClick={() => handleStatusChange(order.id, "preparing")}
+                        className="button button--secondary"
+                        style={{ padding: "6px 10px", fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                      >
+                        <HourglassEmptyIcon style={{ fontSize: "0.95rem" }} /> Prepare
+                      </button>
+                    )}
+                    <button
+                      disabled={order.status !== "preparing"}
+                      onClick={() => handleStatusChange(order.id, "completed")}
+                      className="button button--primary"
+                      style={{ padding: "6px 10px", fontSize: "0.75rem", background: "var(--color-green)", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                    >
+                      <CheckCircleIcon style={{ fontSize: "0.95rem" }} /> Complete
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(order.id, "cancelled")}
+                      className="button button--ghost"
+                      style={{ padding: "6px 10px", fontSize: "0.75rem", color: "red", borderColor: "red", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                    >
+                      <CancelIcon style={{ fontSize: "0.95rem" }} /> Cancel
+                    </button>
+                  </div>
+                )}
               </div>
               
             </div>

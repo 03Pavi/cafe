@@ -25,7 +25,7 @@ Category: ${category || "Beverage/Food"}
 Price: ${price ? "₹" + price : ""}
 Focus on its flavor profile, aroma, and premium texture. Do not include quotes, HTML, or markdown. Make it feel inviting and warm.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: "POST",
