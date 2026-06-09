@@ -7,6 +7,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase-config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchPastOrders, submitOrder, validateCoupon } from "@/store/action/order-actions";
+import { LoadingScreen } from "@/shared/ui/loading-screen";
 
 export default function CheckoutPage() {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ export default function CheckoutPage() {
   const [customerAddress, setCustomerAddress] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
+  const [isPlacing, setIsPlacing] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -77,6 +79,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     if (!customerName || !customerPhone || !customerAddress || cartItems.length === 0) return;
 
+    setIsPlacing(true);
     const orderData = {
       customerName,
       customerPhone,
@@ -100,11 +103,28 @@ export default function CheckoutPage() {
       }
     } catch (err) {
       console.error("Order submission failure:", err);
+      setIsPlacing(false);
     }
   };
 
   return (
     <main className="page-surface">
+      {isPlacing && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(255, 253, 250, 0.9)",
+          zIndex: 9999,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}>
+          <LoadingScreen message="Placing your order. Please wait..." fullHeight={false} />
+        </div>
+      )}
       <div className="container">
         <h1 style={{ marginBottom: "24px" }}>Order Summary & Checkout</h1>
         
