@@ -14,8 +14,10 @@ import { useRouter } from "next/navigation";
 import GoogleIcon from "@mui/icons-material/Google";
 import EmailIcon from "@mui/icons-material/Email";
 import CoffeeIcon from "@mui/icons-material/Coffee";
+import { useAppSelector } from "@/store/hooks";
 
 export default function AdminLoginPage() {
+  const siteSettings = useAppSelector((state) => state.settings.data);
   const [email, setEmail] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -116,8 +118,12 @@ export default function AdminLoginPage() {
     <main className="page-surface" style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh" }}>
       <form className="contact-form" onSubmit={handleSendLink} style={{ width: "100%", maxWidth: "420px", padding: "32px" }}>
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
-          <CoffeeIcon style={{ fontSize: "2.5rem", color: "var(--color-espresso)" }} />
-          <h1 style={{ fontSize: "1.8rem", marginTop: "8px", color: "var(--color-espresso)" }}>Welcome to Cafe</h1>
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            style={{ width: "72px", height: "72px", borderRadius: "50%", objectFit: "cover", margin: "0 auto 12px", display: "block" }} 
+          />
+          <h1 style={{ fontSize: "1.8rem", marginTop: "8px", color: "var(--color-espresso)" }}>Welcome to {siteSettings.cafeName}</h1>
           <p style={{ margin: "4px 0 0", fontSize: "0.9rem" }}>Log in passwordless or via Google</p>
         </div>
 

@@ -138,11 +138,18 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
         <div>
           {/* Drawer Header */}
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4, pb: 2, borderBottom: "1px solid rgba(255, 243, 230, 0.15)" }}>
-            <div>
-              <h2 style={{ fontSize: "1.15rem", margin: 0, color: "var(--color-cream)", fontFamily: "Poppins" }}>
-                {siteSettings.cafeName}
-              </h2>
-              <span style={{ fontSize: "0.75rem", opacity: 0.7 }}>Admin Console</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <img 
+                src="/logo.png" 
+                alt="Logo" 
+                style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(255, 243, 230, 0.2)" }} 
+              />
+              <div>
+                <h2 style={{ fontSize: "1.15rem", margin: 0, color: "var(--color-cream)", fontFamily: "Poppins" }}>
+                  {siteSettings.cafeName}
+                </h2>
+                <span style={{ fontSize: "0.75rem", opacity: 0.7 }}>Admin Console</span>
+              </div>
             </div>
             <IconButton onClick={() => setIsSidebarOpen(false)} sx={{ color: "var(--color-cream)" }}>
               <CloseIcon />

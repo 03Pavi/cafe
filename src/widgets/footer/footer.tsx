@@ -22,7 +22,11 @@ export function Footer() {
       <div className="container site-footer__grid">
         <div>
           <Link className="brand-mark brand-mark--footer" href="/">
-            <span className="brand-mark__icon">{initials}</span>
+            <img 
+              src="/logo.png" 
+              alt="The Genz Cafe Logo" 
+              style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover" }} 
+            />
             <span>{siteSettings.cafeName}</span>
           </Link>
           <p>Freshly brewed house coffee with a smooth caramel finish.</p>

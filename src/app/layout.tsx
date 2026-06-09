@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: `${siteConfig.cafeName} | Now Open`,
   description: siteConfig.description,
   icons: {
-    icon: "/logo.svg",
+    icon: "/logo.png",
   },
 };
 

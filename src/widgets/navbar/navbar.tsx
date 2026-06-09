@@ -111,7 +111,11 @@ export function Navbar() {
             <MenuIcon />
           </IconButton>
           <Link className="brand-mark" href="/">
-            <span className="brand-mark__icon">{initials}</span>
+            <img 
+              src="/logo.png" 
+              alt="The Genz Cafe Logo" 
+              style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover" }} 
+            />
             <span>{siteSettings.cafeName}</span>
           </Link>
         </div>
@@ -161,7 +165,11 @@ export function Navbar() {
             </IconButton>
           </Box>
           <Link className="brand-mark" href="/" onClick={toggleDrawer(false)} style={{ marginBottom: "32px" }}>
-            <span className="brand-mark__icon">{initials}</span>
+            <img 
+              src="/logo.png" 
+              alt="The Genz Cafe Logo" 
+              style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover" }} 
+            />
             <span>{siteSettings.cafeName}</span>
           </Link>
           <List>
