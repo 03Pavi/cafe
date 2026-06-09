@@ -120,66 +120,26 @@ export function Navbar() {
           {navLinks}
         </div>
 
-        <div className="site-nav__right" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="site-nav__right" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           {isLoggedIn ? (
             <Link 
+              className="nav-cta"
               href={profileLink} 
-              style={{ 
-                fontWeight: 800, 
-                fontSize: "0.95rem", 
-                color: "var(--color-espresso)", 
-                fontFamily: "Nunito Sans",
-                textDecoration: "none"
-              }}
             >
-              {isAdmin ? "Admin" : "Profile"}
+              {isAdmin ? "Admin Panel" : "My Profile"}
             </Link>
           ) : (
             <Link 
+              className="nav-cta"
               href="/login" 
-              style={{ 
-                fontWeight: 800, 
-                fontSize: "0.95rem", 
-                color: "var(--color-espresso)", 
-                fontFamily: "Nunito Sans",
-                textDecoration: "none"
-              }}
             >
               Sign In
             </Link>
           )}
 
-          <Link 
-            className="nav-cta" 
-            href="/order" 
-            style={{ 
-              display: "flex", 
-              alignItems: "center", 
-              gap: "8px", 
-              padding: "10px 18px", 
-              borderRadius: "20px" 
-            }}
-          >
-            <ShoppingCartIcon style={{ fontSize: "1.2rem" }} />
-            <span>Cart</span>
-            {totalItems > 0 && (
-              <span 
-                style={{ 
-                  background: "var(--color-cream)", 
-                  color: "var(--color-espresso)", 
-                  borderRadius: "50%", 
-                  width: "20px", 
-                  height: "20px", 
-                  display: "inline-flex", 
-                  alignItems: "center", 
-                  justifyContent: "center", 
-                  fontSize: "0.75rem", 
-                  fontWeight: "bold" 
-                }}
-              >
-                {totalItems}
-              </span>
-            )}
+          <Link href="/order" className="cart-badge" aria-label="Shopping Cart">
+            <ShoppingCartIcon style={{ fontSize: "1.55rem", display: "block" }} />
+            {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
           </Link>
         </div>
 
