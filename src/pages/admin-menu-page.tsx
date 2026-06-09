@@ -33,6 +33,7 @@ export default function AdminMenuPage() {
   const [isAvailable, setIsAvailable] = useState(true);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [generatingAi, setGeneratingAi] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
@@ -71,6 +72,30 @@ export default function AdminMenuPage() {
     };
     fetchCategories();
   }, []);
+
+  const handleGenerateDescription = async () => {
+    if (!name) return;
+    setGeneratingAi(true);
+    try {
+      const response = await fetch("/api/gemini/describe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, category, price }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.description) {
+          setDescription(data.description);
+        }
+      } else {
+        console.warn("Failed to generate description");
+      }
+    } catch (err) {
+      console.error("AI description generation error:", err);
+    } finally {
+      setGeneratingAi(false);
+    }
+  };
 
   const handleImageUpload = async (): Promise<string> => {
     if (!imageFile) return imageUrl || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=300&q=80";
@@ -180,7 +205,30 @@ export default function AdminMenuPage() {
           </label>
 
           <label style={{ display: "flex", flexDirection: "column", gap: "4px", marginBottom: "12px" }}>
-            Description
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span>Description</span>
+              <button
+                type="button"
+                onClick={handleGenerateDescription}
+                disabled={generatingAi || !name}
+                style={{
+                  background: "var(--color-espresso)",
+                  color: "var(--color-cream)",
+                  border: "none",
+                  borderRadius: "4px",
+                  padding: "4px 8px",
+                  fontSize: "0.75rem",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  fontWeight: "bold",
+                  opacity: (!name || generatingAi) ? 0.5 : 1
+                }}
+              >
+                {generatingAi ? "Generating..." : "✨ Generate Description"}
+              </button>
+            </div>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Item ingredients / details..." rows={3} style={{ padding: "10px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(59, 47, 47, 0.16)", font: "inherit", background: "var(--color-cream)", outline: "none" }} />
           </label>
 
