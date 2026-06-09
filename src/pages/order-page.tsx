@@ -71,7 +71,7 @@ export default function OrderPage() {
                     <p style={{ margin: "4px 0 0", fontSize: "0.9rem" }}>{item.description}</p>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-                    <strong>{item.price}</strong>
+                    <strong>₹{item.price}</strong>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", border: "1px solid rgba(59, 47, 47, 0.16)", borderRadius: "var(--radius-sm)", overflow: "hidden" }}>
                       <button
                         onClick={() => handleQuantityChange(item.name, item.quantity, -1)}

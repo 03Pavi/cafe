@@ -1,6 +1,10 @@
-import { siteConfig } from "@/shared/config/site";
+"use client";
+
+import { useAppSelector } from "@/store/hooks";
 
 export default function AboutPage() {
+  const siteSettings = useAppSelector((state) => state.settings.data);
+
   return (
     <main className="page-surface">
       <section className="container about-page">
@@ -8,7 +12,7 @@ export default function AboutPage() {
           <span className="eyebrow">Our New Beginning</span>
           <h1>A neighborhood cafe opened with heart.</h1>
           <p>
-            {siteConfig.cafeName} began with a small dream: to build a cozy, premium,
+            {siteSettings.cafeName} began with a small dream: to build a cozy, premium,
             friendly space where people nearby could pause, meet, work, laugh,
             and feel welcomed from day one.
           </p>

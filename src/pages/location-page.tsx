@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { siteConfig } from "@/shared/config/site";
+import { useAppSelector } from "@/store/hooks";
 import { Skeleton, Box } from "@mui/material";
 
 export default function LocationPage() {
   const [mapLoaded, setMapLoaded] = useState(false);
+  const siteSettings = useAppSelector((state) => state.settings.data);
 
   return (
     <main className="page-surface">
@@ -13,18 +14,18 @@ export default function LocationPage() {
         <div className="location-card">
           <span className="eyebrow">We Are Now Open</span>
           <h1>Visit us for your first cup.</h1>
-          <p>{siteConfig.address}</p>
+          <p>{siteSettings.address}</p>
           <div className="location-details">
             <h2>Opening Hours</h2>
-            {siteConfig.hours.map((hour) => (
+            {siteSettings.hours.map((hour) => (
               <p key={hour}>{hour}</p>
             ))}
           </div>
           <div className="location-details">
             <h2>Contact</h2>
-            <p>{siteConfig.phone}</p>
+            <p>{siteSettings.phone}</p>
           </div>
-          <a className="button button--primary" href={siteConfig.directionsUrl}>
+          <a className="button button--primary" href="https://maps.google.com" target="_blank" rel="noreferrer">
             Visit Us Today
           </a>
         </div>

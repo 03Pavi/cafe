@@ -1,31 +1,19 @@
-const galleryImages = [
-  {
-    src: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=900&q=85",
-    alt: "Newly designed cafe interior",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=900&q=85",
-    alt: "Coffee preparation at the counter",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=900&q=85",
-    alt: "Fresh cafe snacks on a table",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=900&q=85",
-    alt: "Cozy cafe ambience with warm seating",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=85",
-    alt: "Fresh cup of coffee",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1513267048331-5611cad62e41?auto=format&fit=crop&w=900&q=85",
-    alt: "Cafe dessert and coffee pairing",
-  },
-];
+"use client";
+
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchGalleryImages } from "@/store/action/gallery-actions";
+
+import { LoadingScreen } from "@/shared/ui/loading-screen";
 
 export default function GalleryPage() {
+  const dispatch = useAppDispatch();
+  const { images, loading, error } = useAppSelector((state) => state.gallery);
+
+  useEffect(() => {
+    dispatch(fetchGalleryImages());
+  }, [dispatch]);
+
   return (
     <main className="page-surface">
       <section className="container page-hero">
@@ -37,8 +25,13 @@ export default function GalleryPage() {
         </p>
       </section>
       <section className="container gallery-grid">
-        {galleryImages.map((image) => (
-          <figure className="gallery-item" key={image.src}>
+        {loading && <LoadingScreen message="Loading gallery..." />}
+        {error && <p style={{ textAlign: "center", color: "red", width: "100%" }}>{error}</p>}
+        {!loading && !error && images.length === 0 && (
+          <p style={{ textAlign: "center", width: "100%" }}>No gallery images found.</p>
+        )}
+        {!loading && !error && images.map((image) => (
+          <figure className="gallery-item" key={image.id || image.src}>
             <img src={image.src} alt={image.alt} />
           </figure>
         ))}

@@ -1,72 +1,69 @@
 import axios from "axios";
-import { AppDispatch } from "../store";
-import {
-  setLoading,
-  setPastOrders,
-  setError,
-  clearCart,
-  applyPromo,
-  removePromo,
-} from "@/entities/order/model/order-slice";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { clearCart, Order } from "@/entities/order/model/order-slice";
 
-export const fetchPastOrders = () => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
+export const fetchPastOrders = createAsyncThunk<
+  Order[],
+  string | undefined,
+  { rejectValue: string }
+>("order/fetchPastOrders", async (userId, { rejectWithValue }) => {
   try {
-    const response = await axios.get("/api/orders");
-    dispatch(setPastOrders(response.data));
-    dispatch(setError(null));
+    const url = userId ? `/api/orders?userId=${userId}` : "/api/orders";
+    const response = await axios.get(url);
+    return response.data;
   } catch (error: any) {
-    console.error("Fetch orders error:", error);
-    dispatch(setError(error.message || "Failed to fetch orders"));
-  } finally {
-    dispatch(setLoading(false));
+    return rejectWithValue(
+      error.response?.data?.error || error.message || "Failed to fetch orders"
+    );
   }
-};
+});
 
-export const submitOrder = (orderData: {
-  customerName: string;
-  customerPhone: string;
-  customerAddress: string;
-  items: any[];
-  subtotal: number;
-  discount: number;
-  total: number;
-}) => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
+export const submitOrder = createAsyncThunk<
+  any,
+  {
+    customerName: string;
+    customerPhone: string;
+    customerAddress: string;
+    items: any[];
+    subtotal: number;
+    discount: number;
+    total: number;
+    userId?: string;
+    customerEmail?: string;
+  },
+  { rejectValue: string }
+>("order/submitOrder", async (orderData, { rejectWithValue, dispatch }) => {
   try {
     const response = await axios.post("/api/orders", orderData);
     dispatch(clearCart());
-    dispatch(setError(null));
-    dispatch(fetchPastOrders() as any);
+    if (orderData.userId) {
+      dispatch(fetchPastOrders(orderData.userId));
+    } else {
+      dispatch(fetchPastOrders());
+    }
     return response.data;
   } catch (error: any) {
-    console.error("Submit order error:", error);
-    dispatch(setError(error.message || "Failed to submit order"));
-    return null;
-  } finally {
-    dispatch(setLoading(false));
+    return rejectWithValue(
+      error.response?.data?.error || error.message || "Failed to submit order"
+    );
   }
-};
+});
 
-export const validateCoupon = (code: string) => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
+export const validateCoupon = createAsyncThunk<
+  { code: string; percent: number },
+  string,
+  { rejectValue: string }
+>("order/validateCoupon", async (code, { rejectWithValue }) => {
   try {
     const response = await axios.get(`/api/discounts?code=${code}`);
     if (response.data && response.data.percent) {
-      dispatch(applyPromo({ code, percent: response.data.percent }));
-      dispatch(setError(null));
-      return { success: true, percent: response.data.percent };
+      return { code, percent: response.data.percent };
     } else {
-      dispatch(removePromo());
-      dispatch(setError("Invalid coupon code"));
-      return { success: false, error: "Invalid coupon code" };
+      return rejectWithValue("Invalid coupon code");
     }
   } catch (error: any) {
-    console.error("Coupon validation error:", error);
-    dispatch(removePromo());
-    dispatch(setError("Failed to validate coupon"));
-    return { success: false, error: "Coupon validation failed" };
-  } finally {
-    dispatch(setLoading(false));
+    return rejectWithValue(
+      error.response?.data?.error || error.message || "Failed to validate coupon"
+    );
   }
-};
+});

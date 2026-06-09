@@ -6,6 +6,7 @@ import { auth } from "@/lib/firebase/firebase-config";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { siteConfig } from "@/shared/config/site";
+import { LoadingScreen } from "@/shared/ui/loading-screen";
 import { 
   Drawer, 
   IconButton, 
@@ -40,7 +41,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
         setAuthenticated(true);
       } else {
         setAuthenticated(false);
-        router.push("/admin/login");
+        router.push("/login");
       }
       setLoading(false);
     });
@@ -60,7 +61,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
   if (loading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "var(--color-cream)" }}>
-        <p style={{ fontSize: "1.2rem", fontWeight: "bold", color: "var(--color-espresso)" }}>Verifying authorization credentials...</p>
+        <LoadingScreen message="Verifying authorization credentials..." />
       </div>
     );
   }

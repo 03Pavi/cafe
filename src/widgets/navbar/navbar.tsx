@@ -47,20 +47,33 @@ export function Navbar() {
   const cartItems = useAppSelector((state) => state.order.items);
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const siteSettings = useAppSelector((state) => state.settings.data);
+  const initials = siteSettings.cafeName
+    ? siteSettings.cafeName.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "CF";
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.email === process.env.ADMIN_EMAIL) {
-        setIsAdmin(true);
+      if (user) {
+        setIsLoggedIn(true);
+        if (user.email === process.env.ADMIN_EMAIL) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
       } else {
+        setIsLoggedIn(false);
         setIsAdmin(false);
       }
     });
     return () => unsubscribe();
   }, []);
 
-  // Hide public Navbar on admin routes
-  if (pathname?.startsWith("/admin")) {
+  const profileLink = isAdmin ? "/admin" : isLoggedIn ? "/profile" : "/login";
+
+  // Hide public Navbar on admin, login, and profile routes
+  if (pathname?.startsWith("/admin") || pathname === "/login" || pathname === "/profile") {
     return null;
   }
 
@@ -98,8 +111,8 @@ export function Navbar() {
             <MenuIcon />
           </IconButton>
           <Link className="brand-mark" href="/">
-            <span className="brand-mark__icon">{siteConfig.cafeInitials}</span>
-            <span>{siteConfig.cafeName}</span>
+            <span className="brand-mark__icon">{initials}</span>
+            <span>{siteSettings.cafeName}</span>
           </Link>
         </div>
 
@@ -108,7 +121,7 @@ export function Navbar() {
         </div>
 
         <div className="site-nav__right">
-          <Link href={isAdmin ? "/admin" : "/admin/login"} className="profile-badge" aria-label="Admin Profile">
+          <Link href={profileLink} className="profile-badge" aria-label="User Profile">
             <PersonIcon style={{ fontSize: "1.65rem", display: "block" }} />
           </Link>
           <Link href="/order" className="cart-badge" aria-label="Shopping Cart">
@@ -138,8 +151,8 @@ export function Navbar() {
             </IconButton>
           </Box>
           <Link className="brand-mark" href="/" onClick={toggleDrawer(false)} style={{ marginBottom: "32px" }}>
-            <span className="brand-mark__icon">{siteConfig.cafeInitials}</span>
-            <span>{siteConfig.cafeName}</span>
+            <span className="brand-mark__icon">{initials}</span>
+            <span>{siteSettings.cafeName}</span>
           </Link>
           <List>
             {navigationItems.map((item) => {
@@ -176,7 +189,7 @@ export function Navbar() {
                 </ListItem>
               );
             })}
-            <ListItem disablePadding>
+            {/* <ListItem disablePadding>
               <Link href="/order" passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
                 <ListItemButton
                   selected={pathname === "/order"}
@@ -200,11 +213,11 @@ export function Navbar() {
                   />
                 </ListItemButton>
               </Link>
-            </ListItem>
-            <ListItem disablePadding>
-              <Link href={isAdmin ? "/admin" : "/admin/login"} passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
+            </ListItem> */}
+             <ListItem disablePadding>
+              <Link href={profileLink} passHref style={{ width: "100%" }} onClick={toggleDrawer(false)}>
                 <ListItemButton
-                  selected={pathname === "/admin/login" || pathname?.startsWith("/admin")}
+                  selected={pathname === profileLink}
                   sx={{
                     borderRadius: "8px",
                     "&.Mui-selected": {
@@ -213,12 +226,12 @@ export function Navbar() {
                   }}
                 >
                   <ListItemIcon sx={{ minWidth: "40px", color: "inherit" }}>
-                    {isAdmin ? <DashboardIcon /> : <LoginIcon />}
+                    {isAdmin ? <DashboardIcon /> : isLoggedIn ? <PersonIcon /> : <LoginIcon />}
                   </ListItemIcon>
                   <ListItemText
-                    primary={isAdmin ? "Admin Panel" : "Admin Log In"}
+                    primary={isAdmin ? "Admin Panel" : isLoggedIn ? "My Profile" : "Log In"}
                     primaryTypographyProps={{
-                      fontWeight: (pathname === "/admin/login" || pathname?.startsWith("/admin")) ? 800 : 600,
+                      fontWeight: pathname === profileLink ? 800 : 600,
                       fontFamily: "Nunito Sans"
                     }}
                   />

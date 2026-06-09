@@ -7,6 +7,7 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { LoadingScreen } from "@/shared/ui/loading-screen";
 
 interface Order {
   id: string;
@@ -67,7 +68,7 @@ export default function AdminOrdersPage() {
   };
 
   if (loading) {
-    return <p>Syncing orders in real-time...</p>;
+    return <LoadingScreen message="Syncing orders in real-time..." />;
   }
 
   return (
@@ -83,12 +84,8 @@ export default function AdminOrdersPage() {
           {orders.map((order) => (
             <div
               key={order.id}
-              className="location-card"
+              className="location-card admin-order-card-grid"
               style={{
-                display: "grid",
-                gap: "20px",
-                gridTemplateColumns: "1.2fr 1fr 1fr",
-                padding: "24px",
                 borderLeft: `5px solid ${getStatusColor(order.status)}`
               }}
             >
@@ -122,13 +119,13 @@ export default function AdminOrdersPage() {
                 </p>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px", justifyContent: "center", alignItems: "flex-end" }}>
+              <div className="admin-order-actions-container" style={{ display: "flex", flexDirection: "column", gap: "8px", justifyContent: "center", alignItems: "flex-end" }}>
                 <div>
                   <span style={{ fontSize: "0.85rem", opacity: 0.7, marginRight: "8px" }}>Status:</span>
                   <strong style={{ color: getStatusColor(order.status), textTransform: "uppercase" }}>{order.status}</strong>
                 </div>
                 
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "flex-end", marginTop: "12px" }}>
+                <div className="admin-order-actions-container" style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "flex-end", marginTop: "12px" }}>
                   <button
                     disabled={order.status === "preparing"}
                     onClick={() => handleStatusChange(order.id, "preparing")}

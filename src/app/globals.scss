@@ -1021,3 +1021,49 @@ p {
     padding: 0;
   }
 }
+
+/* Admin Responsive Layouts */
+.admin-grid-two-columns {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 980px) {
+  .admin-grid-two-columns {
+    grid-template-columns: 1fr 1.5fr;
+  }
+}
+
+.admin-grid-dashboard-health {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .admin-grid-dashboard-health {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.admin-order-card-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .admin-order-card-grid {
+    grid-template-columns: 1.2fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 899px) {
+  .admin-order-actions-container {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    margin-top: 8px !important;
+  }
+}
+

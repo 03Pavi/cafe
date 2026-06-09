@@ -8,6 +8,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 
+import { LoadingScreen } from "@/shared/ui/loading-screen";
+
 interface Discount {
   code: string;
   percent: number;
@@ -90,7 +92,7 @@ export default function AdminDiscountsPage() {
         <ConfirmationNumberIcon style={{ fontSize: "2rem" }} /> Coupon Codes Manager
       </h1>
 
-      <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
+      <div className="admin-grid-two-columns">
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -125,6 +127,7 @@ export default function AdminDiscountsPage() {
             <input
               type="checkbox"
               checked={isActive}
+              style={{maxWidth:"max-content"}}
               onChange={(e) => setIsActive(e.target.checked)}
             />
             Coupon Active
@@ -146,7 +149,7 @@ export default function AdminDiscountsPage() {
             <LocalActivityIcon style={{ fontSize: "1.2rem" }} /> Available Coupons
           </h2>
           {loading ? (
-            <p>Loading coupons...</p>
+            <LoadingScreen message="Loading coupons..." fullHeight={false} />
           ) : discounts.length === 0 ? (
             <p style={{ color: "var(--color-muted)" }}>No coupons created yet.</p>
           ) : (

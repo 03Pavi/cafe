@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchMenu } from "@/store/action/menu-actions";
 import { MenuCard } from "@/entities/menu-item/menu-item-card";
 
+import { LoadingScreen } from "@/shared/ui/loading-screen";
+
 const categoryIcons: Record<string, string> = {
   All: "🍽️",
   Coffee: "☕",
@@ -76,11 +78,7 @@ export default function MenuPage() {
 
       <section className="container menu-layout">
         {loading && (
-          <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <p style={{ fontSize: "1.2rem", color: "var(--color-muted)" }}>
-              Loading our delicious menu...
-            </p>
-          </div>
+          <LoadingScreen message="Loading our delicious menu..." />
         )}
         
         {error && !loading && (

@@ -6,6 +6,8 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { siteConfig } from "@/shared/config/site";
 import SettingsIcon from "@mui/icons-material/Settings";
 
+import { LoadingScreen } from "@/shared/ui/loading-screen";
+
 export default function AdminSettingsPage() {
   const [cafeName, setCafeName] = useState("");
   const [phone, setPhone] = useState("");
@@ -62,7 +64,7 @@ export default function AdminSettingsPage() {
   };
 
   if (loading) {
-    return <p>Loading café settings...</p>;
+    return <LoadingScreen message="Loading café settings..." />;
   }
 
   return (

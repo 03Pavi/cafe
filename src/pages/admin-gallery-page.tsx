@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/lib/firebase/firebase-config";
 import { collection, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { uploadImage } from "@/shared/lib/cloudinary";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -46,12 +46,9 @@ export default function AdminGalleryPage() {
     if (!imageFile) return src || "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=300&q=80";
     setUploading(true);
     try {
-      const storageRef = ref(storage, `gallery/${Date.now()}_${imageFile.name}`);
-      const snapshot = await uploadBytes(storageRef, imageFile);
-      const url = await getDownloadURL(snapshot.ref);
-      return url;
+      return await uploadImage(imageFile, "gallery");
     } catch (err) {
-      console.warn("Storage upload failed, falling back to mock:", err);
+      console.warn("Image upload failed, falling back to mock:", err);
       return src || "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=300&q=80";
     } finally {
       setUploading(false);
@@ -97,7 +94,7 @@ export default function AdminGalleryPage() {
         <PhotoLibraryIcon /> Café Gallery Manager
       </h1>
 
-      <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
+      <div className="admin-grid-two-columns">
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>

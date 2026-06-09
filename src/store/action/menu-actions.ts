@@ -1,17 +1,22 @@
 import axios from "axios";
-import { AppDispatch } from "../store";
-import { setMenu, setLoading, setError } from "@/entities/menu-item/model/menu-slice";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import type { MenuCategory } from "@/entities/menu-item/menu-data";
 
-export const fetchMenu = () => async (dispatch: AppDispatch) => {
-  dispatch(setLoading(true));
+export const fetchMenu = createAsyncThunk<
+  MenuCategory[],
+  void,
+  { rejectValue: string }
+>("menu/fetchMenu", async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get("/api/menu");
-    dispatch(setMenu(response.data));
-    dispatch(setError(null));
-  } catch (error: any) {
-    console.error("Fetch menu error:", error);
-    dispatch(setError(error.message || "Failed to fetch menu"));
-  } finally {
-    dispatch(setLoading(false));
+    const response = await axios.get<MenuCategory[]>("/api/menu");
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return rejectWithValue(
+        error.response?.data?.error || error.message || "Failed to fetch menu"
+      );
+    }
+
+    return rejectWithValue("Failed to fetch menu");
   }
-};
+});

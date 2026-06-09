@@ -3,11 +3,12 @@
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { siteConfig } from "@/shared/config/site";
+import { useAppSelector } from "@/store/hooks";
 
 function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams?.get("orderId");
+  const siteSettings = useAppSelector((state) => state.settings.data);
 
   return (
     <main className="page-surface">
@@ -15,7 +16,7 @@ function OrderSuccessContent() {
         <div style={{ fontSize: "4rem", marginBottom: "16px" }}>🎉</div>
         <h1 style={{ marginBottom: "16px", color: "var(--color-espresso)" }}>Order Placed Successfully!</h1>
         <p style={{ fontSize: "1.1rem", marginBottom: "24px", color: "var(--color-muted)" }}>
-          Thank you for choosing {siteConfig.cafeName}. We are preparing your freshly brewed coffee and hot snacks right now!
+          Thank you for choosing {siteSettings.cafeName}. We are preparing your freshly brewed coffee and hot snacks right now!
         </p>
 
         {orderId && (

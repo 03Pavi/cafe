@@ -1,6 +1,10 @@
-import { siteConfig } from "@/shared/config/site";
+"use client";
+
+import { useAppSelector } from "@/store/hooks";
 
 export default function ContactPage() {
+  const siteSettings = useAppSelector((state) => state.settings.data);
+
   return (
     <main className="page-surface">
       <section className="container contact-page">
@@ -8,16 +12,15 @@ export default function ContactPage() {
           <span className="eyebrow">Say Hello</span>
           <h1>We would love to welcome you.</h1>
           <p>
-            Call us, message us on WhatsApp, follow our opening updates on
-            Instagram, or send a quick note before your visit.
+            Call us, message us on WhatsApp, follow our updates, or send a quick note before your visit.
           </p>
           <div className="contact-actions">
-            <a className="button button--primary" href={`tel:${siteConfig.phone}`}>
+            <a className="button button--primary" href={`tel:${siteSettings.phone}`}>
               Call Now
             </a>
             <a
               className="button button--secondary"
-              href={`https://wa.me/${siteConfig.whatsapp}`}
+              href={`https://wa.me/${siteSettings.phone.replace(/[^0-9]/g, "")}`}
               target="_blank"
               rel="noreferrer"
             >
@@ -25,7 +28,7 @@ export default function ContactPage() {
             </a>
             <a
               className="button button--ghost"
-              href={siteConfig.instagram}
+              href="https://instagram.com"
               target="_blank"
               rel="noreferrer"
             >

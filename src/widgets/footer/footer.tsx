@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navigationItems } from "@/shared/config/navigation";
-import { siteConfig } from "@/shared/config/site";
+import { useAppSelector } from "@/store/hooks";
 
 export function Footer() {
   const pathname = usePathname();
+  const siteSettings = useAppSelector((state) => state.settings.data);
 
-  // Hide public Footer on admin routes
-  if (pathname?.startsWith("/admin")) {
+  // Hide public Footer on admin, login, and profile routes
+  if (pathname?.startsWith("/admin") || pathname === "/login" || pathname === "/profile") {
     return null;
   }
 
@@ -19,14 +20,14 @@ export function Footer() {
         <div>
           <Link className="brand-mark brand-mark--footer" href="/">
             <span className="brand-mark__icon">BH</span>
-            <span>{siteConfig.cafeName}</span>
+            <span>{siteSettings.cafeName}</span>
           </Link>
-          <p>{siteConfig.message}</p>
+          <p>Freshly brewed house coffee with a smooth caramel finish.</p>
         </div>
         <div>
           <h2>Visit</h2>
-          <p>{siteConfig.address}</p>
-          <p>{siteConfig.phone}</p>
+          <p>{siteSettings.address}</p>
+          <p>{siteSettings.phone}</p>
         </div>
         <div>
           <h2>Explore</h2>

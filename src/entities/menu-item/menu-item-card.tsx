@@ -46,7 +46,7 @@ export function MenuCard({ item }: MenuCardProps) {
         <p>{item.description}</p>
       </div>
       <div className="menu-card__footer">
-        <strong className="menu-card__price">{item.price}</strong>
+        <strong className="menu-card__price">₹{item.price}</strong>
 
         {cartItem ? (
           <div style={{

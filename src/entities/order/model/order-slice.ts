@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchPastOrders, submitOrder, validateCoupon } from "@/store/action/order-actions";
+
 
 export interface CartItem {
   name: string;
@@ -18,6 +20,8 @@ export interface Order {
   total: number;
   status: "pending" | "preparing" | "completed" | "cancelled";
   timestamp: string;
+  userId?: string;
+  customerEmail?: string;
 }
 
 export interface OrderState {
@@ -92,6 +96,50 @@ const orderSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPastOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPastOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
+        state.loading = false;
+        state.pastOrders = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchPastOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message || "Failed to fetch orders";
+      })
+      .addCase(submitOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(submitOrder.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(submitOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message || "Failed to submit order";
+      })
+      .addCase(validateCoupon.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(validateCoupon.fulfilled, (state, action) => {
+        state.loading = false;
+        state.appliedCoupon = action.payload.code;
+        state.promoDiscount = action.payload.percent;
+        state.error = null;
+      })
+      .addCase(validateCoupon.rejected, (state, action) => {
+        state.loading = false;
+        state.appliedCoupon = null;
+        state.promoDiscount = 0;
+        state.error = action.payload || action.error.message || "Failed to validate coupon";
+      });
   },
 });
 

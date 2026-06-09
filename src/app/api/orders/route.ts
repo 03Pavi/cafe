@@ -4,27 +4,51 @@ import { collection, addDoc, getDocs, query, orderBy } from "firebase/firestore"
 
 let mockOrders: any[] = [];
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
     const ordersCollection = collection(db, "orders");
     const q = query(ordersCollection, orderBy("timestamp", "desc"));
     const snapshot = await getDocs(q);
     
-    const orders: any[] = [];
+    let orders: any[] = [];
     snapshot.forEach((doc) => {
       orders.push({ id: doc.id, ...doc.data() });
     });
+
+    if (userId) {
+      orders = orders.filter((order) => order.userId === userId);
+    }
+
     return NextResponse.json(orders);
   } catch (error) {
     console.error("Firebase fetch orders error, falling back to mock orders:", error);
-    return NextResponse.json(mockOrders);
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+    let orders = [...mockOrders];
+    if (userId) {
+      orders = orders.filter((order) => order.userId === userId);
+    }
+    return NextResponse.json(orders);
   }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { customerName, customerPhone, items, total } = body;
+    const { 
+      customerName, 
+      customerPhone, 
+      customerAddress,
+      items, 
+      subtotal,
+      discount,
+      total, 
+      userId, 
+      customerEmail 
+    } = body;
     
     if (!customerName || !customerPhone || !items || items.length === 0) {
       return NextResponse.json(
@@ -36,9 +60,15 @@ export async function POST(request: Request) {
     const newOrder = {
       customerName,
       customerPhone,
+      customerAddress: customerAddress || "",
       items,
+      subtotal: subtotal || total,
+      discount: discount || 0,
       total,
+      status: "pending",
       timestamp: new Date().toISOString(),
+      ...(userId && { userId }),
+      ...(customerEmail && { customerEmail }),
     };
     
     try {

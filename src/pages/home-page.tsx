@@ -1,8 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { OpeningBadge } from "@/features/opening-badge/opening-badge";
 import { MenuCard } from "@/entities/menu-item/menu-item-card";
-import { bestSellers, menuCategories } from "@/entities/menu-item/menu-data";
-import { siteConfig } from "@/shared/config/site";
+import { useAppSelector } from "@/store/hooks";
 
 const trustBadges = [
   "Newly Opened Cafe",
@@ -12,7 +13,12 @@ const trustBadges = [
 ];
 
 export default function HomePage() {
-  const previewItems = menuCategories.flatMap((category) => category.items).slice(0, 6);
+  const categories = useAppSelector((state) => state.menu.categories);
+  const siteSettings = useAppSelector((state) => state.settings.data);
+
+  const allItems = categories.flatMap((category) => category.items);
+  const bestSellers = allItems.slice(0, 4);
+  const previewItems = allItems.slice(0, 6);
 
   return (
     <main>
@@ -23,8 +29,8 @@ export default function HomePage() {
               <OpeningBadge label="Now Open" />
               <OpeningBadge label="Grand Opening" />
             </div>
-            <h1>{siteConfig.cafeName}</h1>
-            <p className="hero-section__tagline">{siteConfig.tagline}</p>
+            <h1>{siteSettings.cafeName}</h1>
+            <p className="hero-section__tagline">Brewed Fresh, Served Happy</p>
             <p style={{ margin: "16px 0 24px", fontSize: "1.1rem" }}>
               We are a newly opened cafe in your area, ready to serve freshly
               brewed coffee, delicious snacks, and a warm cozy atmosphere. Come
@@ -37,9 +43,9 @@ export default function HomePage() {
               <Link className="button button--secondary" href="/menu">
                 View Menu
               </Link>
-              <a className="button button--ghost" href={siteConfig.directionsUrl}>
+              <Link className="button button--ghost" href="/location">
                 Get Directions
-              </a>
+              </Link>
             </div>
             <div className="trust-strip" aria-label="Cafe highlights">
               {trustBadges.map((badge) => (
@@ -64,11 +70,15 @@ export default function HomePage() {
           <span>Launch Favorites</span>
           <h2>Best Sellers for Our First Guests</h2>
         </div>
-        <div className="card-grid card-grid--four">
-          {bestSellers.map((item) => (
-            <MenuCard key={item.name} item={item} />
-          ))}
-        </div>
+        {bestSellers.length === 0 ? (
+          <p style={{ color: "var(--color-muted)" }}>Loading best sellers...</p>
+        ) : (
+          <div className="card-grid card-grid--four">
+            {bestSellers.map((item) => (
+              <MenuCard key={item.name} item={item} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="story-section">
@@ -95,11 +105,15 @@ export default function HomePage() {
           <span>Freshly Started</span>
           <h2>Featured Menu Preview</h2>
         </div>
-        <div className="card-grid card-grid--three">
-          {previewItems.map((item) => (
-            <MenuCard key={`${item.name}-${item.price}`} item={item} />
-          ))}
-        </div>
+        {previewItems.length === 0 ? (
+          <p style={{ color: "var(--color-muted)" }}>Loading menu preview...</p>
+        ) : (
+          <div className="card-grid card-grid--three">
+            {previewItems.map((item) => (
+              <MenuCard key={`${item.name}-${item.price}`} item={item} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="container grand-opening-cta">
@@ -108,9 +122,9 @@ export default function HomePage() {
             <span>We are open now</span>
             <h2>Come Visit Us Today!</h2>
           </div>
-          <a className="button button--light" href={siteConfig.directionsUrl}>
+          <Link className="button button--light" href="/location">
             Get Directions
-          </a>
+          </Link>
         </div>
       </section>
     </main>

@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { db, storage } from "@/lib/firebase/firebase-config";
 import { collection, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { uploadImage } from "@/shared/lib/cloudinary";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+
+import { LoadingScreen } from "@/shared/ui/loading-screen";
 
 interface MenuItem {
   id: string;
@@ -32,6 +34,7 @@ export default function AdminMenuPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -51,18 +54,31 @@ export default function AdminMenuPage() {
 
   useEffect(() => {
     fetchItems();
+    const fetchCategories = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "categories"));
+        const list: { id: string; name: string }[] = [];
+        snapshot.forEach((doc) => {
+          list.push({ id: doc.id, name: doc.data().name || doc.id });
+        });
+        setCategories(list);
+        if (list.length > 0) {
+          setCategory(list[0].name || list[0].id);
+        }
+      } catch (err) {
+        console.error("Failed to load categories in menu manager:", err);
+      }
+    };
+    fetchCategories();
   }, []);
 
   const handleImageUpload = async (): Promise<string> => {
     if (!imageFile) return imageUrl || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=300&q=80";
     setUploading(true);
     try {
-      const storageRef = ref(storage, `menu/${Date.now()}_${imageFile.name}`);
-      const snapshot = await uploadBytes(storageRef, imageFile);
-      const url = await getDownloadURL(snapshot.ref);
-      return url;
+      return await uploadImage(imageFile, "menu");
     } catch (err) {
-      console.warn("Storage upload failed, falling back to mock:", err);
+      console.warn("Image upload failed, falling back to mock:", err);
       return imageUrl || "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=300&q=80";
     } finally {
       setUploading(false);
@@ -126,7 +142,7 @@ export default function AdminMenuPage() {
         <RestaurantIcon /> Menu Items Manager
       </h1>
 
-      <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
+      <div className="admin-grid-two-columns">
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -150,11 +166,15 @@ export default function AdminMenuPage() {
               onChange={(e) => setCategory(e.target.value)}
               style={{ padding: "10px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(59, 47, 47, 0.16)", font: "inherit", background: "var(--color-cream)", outline: "none" }}
             >
-              <option value="Coffee">Coffee</option>
-              <option value="Tea">Tea</option>
-              <option value="Snacks">Snacks</option>
-              <option value="Maggi / Fast Food">Maggi / Fast Food</option>
-              <option value="Cold Drinks">Cold Drinks</option>
+              {categories.length === 0 ? (
+                <option value="">No categories created yet</option>
+              ) : (
+                categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))
+              )}
             </select>
           </label>
 
@@ -174,7 +194,7 @@ export default function AdminMenuPage() {
           </label>
 
           <label style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px" }}>
-            <input type="checkbox" checked={isAvailable} onChange={(e) => setIsAvailable(e.target.checked)} />
+            <input type="checkbox" style={{ maxWidth:"max-content"}} checked={isAvailable} onChange={(e) => setIsAvailable(e.target.checked)} />
             Available in Store
           </label>
 
@@ -206,7 +226,7 @@ export default function AdminMenuPage() {
             <ListAltIcon /> Menu Items Listing
           </h2>
           {loading ? (
-            <p>Loading items...</p>
+            <LoadingScreen message="Loading items..." fullHeight={false} />
           ) : items.length === 0 ? (
             <p style={{ color: "var(--color-muted)" }}>No menu items yet. Create one on the left!</p>
           ) : (
@@ -237,7 +257,7 @@ export default function AdminMenuPage() {
                   </div>
                   
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <strong>{item.price}</strong>
+                    <strong>₹{item.price}</strong>
                     <button onClick={() => handleEdit(item)} className="button button--secondary" style={{ padding: "6px 10px", fontSize: "0.8rem" }}>
                       Edit
                     </button>

@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase-config";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { submitOrder, validateCoupon } from "@/store/action/order-actions";
+import { fetchPastOrders, submitOrder, validateCoupon } from "@/store/action/order-actions";
 
 export default function CheckoutPage() {
   const dispatch = useAppDispatch();
@@ -15,12 +17,36 @@ export default function CheckoutPage() {
   const promoDiscount = useAppSelector((state) => state.order.promoDiscount);
   const loading = useAppSelector((state) => state.order.loading);
   const error = useAppSelector((state) => state.order.error);
+  const pastOrders = useAppSelector((state) => state.order.pastOrders);
 
+  const [user, setUser] = useState<User | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        setCustomerName(currentUser.displayName || "");
+        dispatch(fetchPastOrders(currentUser.uid));
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      const userOrders = pastOrders.filter(o => o.userId === user.uid);
+      if (userOrders.length > 0) {
+        const lastOrder = userOrders[0];
+        setCustomerPhone(lastOrder.customerPhone || "");
+        setCustomerAddress(lastOrder.customerAddress || "");
+      }
+    }
+  }, [pastOrders, user]);
 
   const parsePrice = (priceStr: string): number => {
     return parseFloat(priceStr.replace(/[^0-9.]/g, "")) || 0;
@@ -39,11 +65,11 @@ export default function CheckoutPage() {
   const handleApplyCoupon = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!couponCode) return;
-    const result = await dispatch(validateCoupon(couponCode) as any);
-    if (result.success) {
+    try {
+      const result = await dispatch(validateCoupon(couponCode)).unwrap();
       setCouponMessage(`Promo code applied! Saved ${result.percent}%`);
-    } else {
-      setCouponMessage("Invalid coupon code");
+    } catch (err: any) {
+      setCouponMessage(err || "Invalid coupon code");
     }
   };
 
@@ -63,11 +89,17 @@ export default function CheckoutPage() {
       subtotal,
       discount: discountAmount,
       total: grandTotal,
+      userId: user?.uid,
+      customerEmail: user?.email || undefined
     };
 
-    const result = await dispatch(submitOrder(orderData) as any);
-    if (result && result.id) {
-      router.push(`/order-success?orderId=${result.id}`);
+    try {
+      const result = await dispatch(submitOrder(orderData)).unwrap();
+      if (result && result.id) {
+        router.push(`/order-success?orderId=${result.id}`);
+      }
+    } catch (err) {
+      console.error("Order submission failure:", err);
     }
   };
 

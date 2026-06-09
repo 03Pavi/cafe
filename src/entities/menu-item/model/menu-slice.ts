@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { MenuCategory, MenuItem } from "../menu-data";
+import { fetchMenu } from "@/store/action/menu-actions";
 
 export interface MenuState {
   categories: MenuCategory[];
@@ -29,6 +30,22 @@ const menuSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchMenu.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMenu.fulfilled, (state, action: PayloadAction<MenuCategory[]>) => {
+        state.loading = false;
+        state.categories = action.payload;
+        state.items = action.payload.flatMap((cat) => cat.items);
+      })
+      .addCase(fetchMenu.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || action.error.message || "Failed to fetch menu";
+      });
   },
 });
 

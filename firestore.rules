@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if the user is authenticated as the admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == '03pavitar.dev@gmail.com';
+    }
+
+    // menu: read by everyone, writeable by anyone (for seeding from Next.js server context)
+    // In production, you would seed this via admin panel or Firebase Admin SDK.
+    match /menu/{menuId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // menu-items: read by everyone, writeable only by admin
+    match /menu-items/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // gallery-images: read by everyone, writeable only by admin
+    match /gallery-images/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // categories: read by everyone, writeable by admin or by Next.js server context (seeding/creating)
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin() || request.auth == null;
+    }
+
+    // discounts: read by everyone, writeable by admin or by Next.js server context (seeding/creating)
+    match /discounts/{discountId} {
+      allow read: if true;
+      allow write: if isAdmin() || request.auth == null;
+    }
+
+    // settings: read by everyone, writeable by admin or by Next.js server context (seeding/creating)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin() || request.auth == null;
+    }
+
+    // orders: create by anyone, read and update/delete only by admin (or unauthenticated server context)
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin() || request.auth == null;
+    }
+  }
+}

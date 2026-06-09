@@ -19,7 +19,6 @@ export async function GET() {
       return NextResponse.json(docSnap.data());
     }
     
-    await setDoc(docRef, defaultSettings);
     return NextResponse.json(defaultSettings);
   } catch (error) {
     console.error("Firebase fetch settings error, falling back to local:", error);

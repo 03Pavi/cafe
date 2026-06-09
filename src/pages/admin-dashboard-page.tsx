@@ -26,6 +26,8 @@ interface Order {
   timestamp: string;
 }
 
+import { LoadingScreen } from "@/shared/ui/loading-screen";
+
 export default function AdminDashboardPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ export default function AdminDashboardPage() {
     .slice(0, 5);
 
   if (loading) {
-    return <p>Loading dashboard statistics...</p>;
+    return <LoadingScreen message="Loading dashboard statistics..." />;
   }
 
   return (
@@ -94,7 +96,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1fr" }}>
+      <div className="admin-grid-dashboard-health">
         
         <div className="location-card" style={{ padding: "24px" }}>
           <h2 style={{ fontSize: "1.3rem", marginBottom: "16px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>

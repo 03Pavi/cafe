@@ -8,6 +8,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import ListIcon from "@mui/icons-material/List";
 
+import { LoadingScreen } from "@/shared/ui/loading-screen";
+
 interface Category {
   id: string;
   name: string;
@@ -71,7 +73,7 @@ export default function AdminCategoriesPage() {
         <CategoryIcon style={{ fontSize: "2rem" }} /> Menu Categories Manager
       </h1>
 
-      <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1fr 1.5fr" }}>
+      <div className="admin-grid-two-columns">
         
         <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px", height: "fit-content" }}>
           <h2 style={{ fontSize: "1.2rem", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -105,7 +107,7 @@ export default function AdminCategoriesPage() {
             <ListIcon style={{ fontSize: "1.2rem" }} /> Categories List
           </h2>
           {loading ? (
-            <p>Loading categories...</p>
+            <LoadingScreen message="Loading categories..." fullHeight={false} />
           ) : categories.length === 0 ? (
             <p style={{ color: "var(--color-muted)" }}>No categories yet.</p>
           ) : (
