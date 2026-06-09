@@ -1035,6 +1035,18 @@ p {
   }
 }
 
+.admin-grid-even-columns {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 980px) {
+  .admin-grid-even-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .admin-grid-dashboard-health {
   display: grid;
   gap: 24px;

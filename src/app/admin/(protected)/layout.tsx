@@ -5,7 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase-config";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { siteConfig } from "@/shared/config/site";
+import { useAppSelector } from "@/store/hooks";
 import { LoadingScreen } from "@/shared/ui/loading-screen";
 import { 
   Drawer, 
@@ -34,6 +34,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const siteSettings = useAppSelector((state) => state.settings.data);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -108,7 +109,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
           <MenuIcon />
         </IconButton>
         <h1 style={{ fontSize: "1.25rem", color: "var(--color-cream)", margin: 0, fontFamily: "Poppins" }}>
-          {siteConfig.cafeName} Admin
+          {siteSettings.cafeName} Admin
         </h1>
       </header>
 
@@ -139,7 +140,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4, pb: 2, borderBottom: "1px solid rgba(255, 243, 230, 0.15)" }}>
             <div>
               <h2 style={{ fontSize: "1.15rem", margin: 0, color: "var(--color-cream)", fontFamily: "Poppins" }}>
-                {siteConfig.cafeName}
+                {siteSettings.cafeName}
               </h2>
               <span style={{ fontSize: "0.75rem", opacity: 0.7 }}>Admin Console</span>
             </div>

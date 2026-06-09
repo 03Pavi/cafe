@@ -8,6 +8,9 @@ import { useAppSelector } from "@/store/hooks";
 export function Footer() {
   const pathname = usePathname();
   const siteSettings = useAppSelector((state) => state.settings.data);
+  const initials = siteSettings.cafeName
+    ? siteSettings.cafeName.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "CF";
 
   // Hide public Footer on admin, login, and profile routes
   if (pathname?.startsWith("/admin") || pathname === "/login" || pathname === "/profile") {
@@ -19,7 +22,7 @@ export function Footer() {
       <div className="container site-footer__grid">
         <div>
           <Link className="brand-mark brand-mark--footer" href="/">
-            <span className="brand-mark__icon">BH</span>
+            <span className="brand-mark__icon">{initials}</span>
             <span>{siteSettings.cafeName}</span>
           </Link>
           <p>Freshly brewed house coffee with a smooth caramel finish.</p>
