@@ -151,7 +151,7 @@ export default function AdminSettingsPage() {
   }
 
   return (
-    <div style={{ maxWidth: "700px" }}>
+    <div style={{ maxWidth: "1200px" }}>
       <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
         <SettingsIcon /> General Café Settings
       </h1>
@@ -162,186 +162,199 @@ export default function AdminSettingsPage() {
         </div>
       )}
 
-      <form className="contact-form" onSubmit={handleSubmit} style={{ padding: "24px" }}>
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
-          Café Brand Name
-          <input
-            type="text"
-            required
-            value={cafeName}
-            onChange={(e) => setCafeName(e.target.value)}
-            placeholder={`e.g. ${siteConfig.cafeName}`}
-          />
-        </label>
+      <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <div className="admin-grid-two-columns">
+          
+          {/* Left Column: General Configuration Card */}
+          <div className="contact-form" style={{ padding: "24px", margin: 0, height: "100%" }}>
+            <h2 style={{ fontSize: "1.2rem", color: "var(--color-espresso)", marginBottom: "20px", fontWeight: "bold" }}>General Configuration</h2>
+            
+            <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+              Café Brand Name
+              <input
+                type="text"
+                required
+                value={cafeName}
+                onChange={(e) => setCafeName(e.target.value)}
+                placeholder={`e.g. ${siteConfig.cafeName}`}
+              />
+            </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
-          Public Phone Number
-          <input
-            type="text"
-            required
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="e.g. +91 98765 43210"
-          />
-        </label>
+            <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+              Public Phone Number
+              <input
+                type="text"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="e.g. +91 98765 43210"
+              />
+            </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
-          Physical Street Address
-          <input
-            type="text"
-            required
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="e.g. 123 Cafe Street"
-          />
-        </label>
+            <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+              Physical Street Address
+              <input
+                type="text"
+                required
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="e.g. 123 Cafe Street"
+              />
+            </label>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
-          Google Maps Directions Link
-          <input
-            type="text"
-            value={directionsUrl}
-            onChange={(e) => setDirectionsUrl(e.target.value)}
-            placeholder="e.g. https://www.google.com/maps/..."
-          />
-        </label>
+            <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+              Google Maps Directions Link
+              <input
+                type="text"
+                value={directionsUrl}
+                onChange={(e) => setDirectionsUrl(e.target.value)}
+                placeholder="e.g. https://www.google.com/maps/..."
+              />
+            </label>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
-          <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            Map Latitude
-            <input
-              type="text"
-              value={mapLatitude}
-              onChange={(e) => setMapLatitude(e.target.value)}
-              placeholder="e.g. 28.6139"
-            />
-          </label>
-          <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            Map Longitude
-            <input
-              type="text"
-              value={mapLongitude}
-              onChange={(e) => setMapLongitude(e.target.value)}
-              placeholder="e.g. 77.2090"
-            />
-          </label>
-        </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+              <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                Map Latitude
+                <input
+                  type="text"
+                  value={mapLatitude}
+                  onChange={(e) => setMapLatitude(e.target.value)}
+                  placeholder="e.g. 28.6139"
+                />
+              </label>
+              <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                Map Longitude
+                <input
+                  type="text"
+                  value={mapLongitude}
+                  onChange={(e) => setMapLongitude(e.target.value)}
+                  placeholder="e.g. 77.2090"
+                />
+              </label>
+            </div>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
-          Instagram Link
-          <input
-            type="text"
-            value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
-            placeholder="e.g. https://www.instagram.com/yourcafe"
-          />
-        </label>
-
-        <div style={{ marginBottom: "24px" }}>
-          <h2 style={{ fontSize: "1rem", color: "var(--color-espresso)", marginBottom: "12px", fontWeight: "bold" }}>Operating Hours Configuration</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {hourSlots.map((slot, index) => (
-              <div key={index} style={{ display: "grid", gridTemplateColumns: "1.2fr 1.2fr 1fr 1fr auto", gap: "10px", alignItems: "end", background: "rgba(59, 47, 47, 0.04)", padding: "12px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(59, 47, 47, 0.08)" }}>
-                <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
-                  From Day
-                  <select
-                    value={slot.startDay}
-                    onChange={(e) => {
-                      const updated = [...hourSlots];
-                      updated[index].startDay = e.target.value;
-                      setHourSlots(updated);
-                    }}
-                    style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)" }}
-                  >
-                    {DAYS_OF_WEEK.map(day => <option key={day} value={day}>{day}</option>)}
-                  </select>
-                </label>
-                <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
-                  To Day
-                  <select
-                    value={slot.endDay}
-                    onChange={(e) => {
-                      const updated = [...hourSlots];
-                      updated[index].endDay = e.target.value;
-                      setHourSlots(updated);
-                    }}
-                    style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)" }}
-                  >
-                    {DAYS_OF_WEEK.map(day => <option key={day} value={day}>{day}</option>)}
-                  </select>
-                </label>
-                <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
-                  Open Time
-                  <input
-                    type="time"
-                    required
-                    value={slot.openTime}
-                    onChange={(e) => {
-                      const updated = [...hourSlots];
-                      updated[index].openTime = e.target.value;
-                      setHourSlots(updated);
-                    }}
-                    style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)", minHeight: "38px" }}
-                  />
-                </label>
-                <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
-                  Close Time
-                  <input
-                    type="time"
-                    required
-                    value={slot.closeTime}
-                    onChange={(e) => {
-                      const updated = [...hourSlots];
-                      updated[index].closeTime = e.target.value;
-                      setHourSlots(updated);
-                    }}
-                    style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)", minHeight: "38px" }}
-                  />
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHourSlots(hourSlots.filter((_, i) => i !== index));
-                  }}
-                  disabled={hourSlots.length === 1}
-                  style={{
-                    background: "rgba(220, 53, 69, 0.1)",
-                    color: "#dc3545",
-                    border: "1px solid rgba(220, 53, 69, 0.2)",
-                    borderRadius: "4px",
-                    padding: "8px 12px",
-                    cursor: "pointer",
-                    fontWeight: "bold",
-                    opacity: hourSlots.length === 1 ? 0.5 : 1,
-                    minHeight: "38px"
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => {
-                setHourSlots([...hourSlots, { startDay: "Monday", endDay: "Friday", openTime: "08:00", closeTime: "22:00" }]);
-              }}
-              style={{
-                background: "var(--color-espresso)",
-                color: "var(--color-cream)",
-                border: "none",
-                borderRadius: "var(--radius-sm)",
-                padding: "8px 16px",
-                cursor: "pointer",
-                fontWeight: "bold",
-                width: "max-content"
-              }}
-            >
-              + Add Time Slot
-            </button>
+            <label style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+              Instagram Link
+              <input
+                type="text"
+                value={instagram}
+                onChange={(e) => setInstagram(e.target.value)}
+                placeholder="e.g. https://www.instagram.com/yourcafe"
+              />
+            </label>
           </div>
+
+          {/* Right Column: Operating Hours Card */}
+          <div className="contact-form" style={{ padding: "24px", margin: 0, height: "100%" }}>
+            <h2 style={{ fontSize: "1.2rem", color: "var(--color-espresso)", marginBottom: "20px", fontWeight: "bold" }}>Operating Hours</h2>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {hourSlots.map((slot, index) => (
+                <div key={index} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", background: "rgba(59, 47, 47, 0.04)", padding: "12px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(59, 47, 47, 0.08)" }}>
+                  <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
+                    From Day
+                    <select
+                      value={slot.startDay}
+                      onChange={(e) => {
+                        const updated = [...hourSlots];
+                        updated[index].startDay = e.target.value;
+                        setHourSlots(updated);
+                      }}
+                      style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)" }}
+                    >
+                      {DAYS_OF_WEEK.map(day => <option key={day} value={day}>{day}</option>)}
+                    </select>
+                  </label>
+                  <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
+                    To Day
+                    <select
+                      value={slot.endDay}
+                      onChange={(e) => {
+                        const updated = [...hourSlots];
+                        updated[index].endDay = e.target.value;
+                        setHourSlots(updated);
+                      }}
+                      style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)" }}
+                    >
+                      {DAYS_OF_WEEK.map(day => <option key={day} value={day}>{day}</option>)}
+                    </select>
+                  </label>
+                  <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
+                    Open Time
+                    <input
+                      type="time"
+                      required
+                      value={slot.openTime}
+                      onChange={(e) => {
+                        const updated = [...hourSlots];
+                        updated[index].openTime = e.target.value;
+                        setHourSlots(updated);
+                      }}
+                      style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)", minHeight: "38px" }}
+                    />
+                  </label>
+                  <label style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "0.85rem" }}>
+                    Close Time
+                    <input
+                      type="time"
+                      required
+                      value={slot.closeTime}
+                      onChange={(e) => {
+                        const updated = [...hourSlots];
+                        updated[index].closeTime = e.target.value;
+                        setHourSlots(updated);
+                      }}
+                      style={{ padding: "8px", borderRadius: "4px", border: "1px solid rgba(59, 47, 47, 0.16)", background: "var(--color-cream)", minHeight: "38px" }}
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHourSlots(hourSlots.filter((_, i) => i !== index));
+                    }}
+                    disabled={hourSlots.length === 1}
+                    style={{
+                      gridColumn: "span 2",
+                      background: "rgba(220, 53, 69, 0.1)",
+                      color: "#dc3545",
+                      border: "1px solid rgba(220, 53, 69, 0.2)",
+                      borderRadius: "4px",
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                      fontWeight: "bold",
+                      opacity: hourSlots.length === 1 ? 0.5 : 1,
+                      minHeight: "38px",
+                      marginTop: "6px"
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setHourSlots([...hourSlots, { startDay: "Monday", endDay: "Friday", openTime: "08:00", closeTime: "22:00" }]);
+                }}
+                style={{
+                  background: "var(--color-espresso)",
+                  color: "var(--color-cream)",
+                  border: "none",
+                  borderRadius: "var(--radius-sm)",
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                  width: "100%"
+                }}
+              >
+                + Add Time Slot
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <button type="submit" className="button button--primary" style={{ width: "100%", padding: "12px" }}>
+        <button type="submit" className="button button--primary" style={{ width: "100%", padding: "12px", marginTop: "24px" }}>
           Save Configuration
         </button>
       </form>
