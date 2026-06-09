@@ -22,9 +22,12 @@ interface Order {
   timestamp: string;
 }
 
+type OrderStatus = "pending" | "preparing" | "completed" | "cancelled";
+
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<OrderStatus>("pending");
 
   useEffect(() => {
     const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
@@ -43,7 +46,7 @@ export default function AdminOrdersPage() {
     return () => unsubscribe();
   }, []);
 
-  const handleStatusChange = async (orderId: string, newStatus: string) => {
+  const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
     try {
       const docRef = doc(db, "orders", orderId);
       await updateDoc(docRef, { status: newStatus });
@@ -52,7 +55,7 @@ export default function AdminOrdersPage() {
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: OrderStatus) => {
     switch (status) {
       case "pending":
         return "#e28743";
@@ -71,17 +74,36 @@ export default function AdminOrdersPage() {
     return <LoadingScreen message="Syncing orders in real-time..." />;
   }
 
+  const filteredOrders = orders.filter((order) => order.status === activeTab);
+
   return (
     <div>
       <h1 style={{ marginBottom: "24px", color: "var(--color-espresso)", display: "flex", alignItems: "center", gap: "8px" }}>
-        <ShoppingBagIcon /> Customer Orders (Real-time)
+        <ShoppingBagIcon /> Customer Orders Manager (Real-time)
       </h1>
+
+      {/* Tab Navigation */}
+      <div style={{ display: "flex", gap: "12px", borderBottom: "1px solid rgba(59, 47, 47, 0.1)", paddingBottom: "12px", marginBottom: "24px", flexWrap: "wrap" }}>
+        {(["pending", "preparing", "completed", "cancelled"] as const).map((tab) => {
+          const count = orders.filter(o => o.status === tab).length;
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`button ${activeTab === tab ? "button--primary" : "button--ghost"}`}
+              style={{ padding: "8px 18px", borderRadius: "20px", textTransform: "capitalize" }}
+            >
+              {tab} ({count})
+            </button>
+          );
+        })}
+      </div>
       
-      {orders.length === 0 ? (
-        <p style={{ color: "var(--color-muted)" }}>No customer orders placed yet.</p>
+      {filteredOrders.length === 0 ? (
+        <p style={{ color: "var(--color-muted)", padding: "20px 0" }}>No {activeTab} orders at the moment.</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {orders.map((order) => (
+          {filteredOrders.map((order) => (
             <div
               key={order.id}
               className="location-card admin-order-card-grid"
@@ -127,7 +149,7 @@ export default function AdminOrdersPage() {
                 
                 <div className="admin-order-actions-container" style={{ display: "flex", flexWrap: "wrap", gap: "6px", justifyContent: "flex-end", marginTop: "12px" }}>
                   <button
-                    disabled={order.status === "preparing"}
+                    disabled={order.status !== "pending"}
                     onClick={() => handleStatusChange(order.id, "preparing")}
                     className="button button--secondary"
                     style={{ padding: "6px 10px", fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: "4px" }}
@@ -135,7 +157,7 @@ export default function AdminOrdersPage() {
                     <HourglassEmptyIcon style={{ fontSize: "0.95rem" }} /> Prepare
                   </button>
                   <button
-                    disabled={order.status === "completed"}
+                    disabled={order.status !== "preparing"}
                     onClick={() => handleStatusChange(order.id, "completed")}
                     className="button button--primary"
                     style={{ padding: "6px 10px", fontSize: "0.75rem", background: "var(--color-green)", display: "inline-flex", alignItems: "center", gap: "4px" }}
@@ -143,7 +165,7 @@ export default function AdminOrdersPage() {
                     <CheckCircleIcon style={{ fontSize: "0.95rem" }} /> Complete
                   </button>
                   <button
-                    disabled={order.status === "cancelled"}
+                    disabled={order.status !== "pending" && order.status !== "preparing"}
                     onClick={() => handleStatusChange(order.id, "cancelled")}
                     className="button button--ghost"
                     style={{ padding: "6px 10px", fontSize: "0.75rem", color: "red", borderColor: "red", display: "inline-flex", alignItems: "center", gap: "4px" }}
