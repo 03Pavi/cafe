@@ -84,7 +84,7 @@ export default function CheckoutPage() {
             </Link>
           </div>
         ) : (
-          <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1.4fr 1fr" }}>
+          <div className="responsive-grid responsive-grid--checkout">
             
             {/* Left Column: Form & Details */}
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>

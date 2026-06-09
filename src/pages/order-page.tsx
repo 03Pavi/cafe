@@ -50,7 +50,7 @@ export default function OrderPage() {
             </Link>
           </div>
         ) : (
-          <div style={{ display: "grid", gap: "24px", gridTemplateColumns: "1.6fr 1fr" }}>
+          <div className="responsive-grid responsive-grid--cart">
             {/* Cart Items */}
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               {cartItems.map((item) => (
@@ -63,13 +63,14 @@ export default function OrderPage() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     gap: "16px",
+                    flexWrap: "wrap",
                   }}
                 >
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: "1 1 200px" }}>
                     <h3 style={{ margin: 0, fontSize: "1.15rem" }}>{item.name}</h3>
                     <p style={{ margin: "4px 0 0", fontSize: "0.9rem" }}>{item.description}</p>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
                     <strong>{item.price}</strong>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", border: "1px solid rgba(59, 47, 47, 0.16)", borderRadius: "var(--radius-sm)", overflow: "hidden" }}>
                       <button
